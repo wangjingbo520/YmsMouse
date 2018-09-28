@@ -10,24 +10,29 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.inuker.bluetooth.library.connect.listener.BluetoothStateListener;
+import com.inuker.bluetooth.library.connect.options.BleConnectOptions;
+import com.inuker.bluetooth.library.connect.response.BleConnectResponse;
+import com.inuker.bluetooth.library.model.BleGattProfile;
+import com.inuker.bluetooth.library.model.BleGattService;
 import com.inuker.bluetooth.library.search.SearchRequest;
 import com.inuker.bluetooth.library.search.SearchResult;
 import com.inuker.bluetooth.library.search.response.SearchResponse;
 import com.inuker.bluetooth.library.utils.BluetoothLog;
 import com.mouse.app.adapter.DeviceListAdapter;
 import com.mouse.app.utils.ClientManager;
+import com.mouse.app.utils.Constants;
+import com.mouse.app.utils.MathUtils;
 import com.mouse.app.utils.ToastUtil;
 import com.mouse.app.view.LoadingDialog;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.OnNeverAskAgain;
@@ -36,8 +41,10 @@ import permissions.dispatcher.OnShowRationale;
 import permissions.dispatcher.PermissionRequest;
 import permissions.dispatcher.RuntimePermissions;
 
+import static com.inuker.bluetooth.library.Constants.REQUEST_SUCCESS;
+
 @RuntimePermissions
-public class BleActivity extends AppCompatActivity {
+public class BleActivity extends BaseActivity implements DeviceListAdapter.AdressListenser {
     private String TAG = BleActivity.class.getSimpleName();
     private DeviceListAdapter mAdapter;
     private List<SearchResult> mDevices;
@@ -64,7 +71,7 @@ public class BleActivity extends AppCompatActivity {
         builder = new LoadingDialog.Builder(this);
         builder.setMessage("Finding Device").setCancelable(false);
         dialog = builder.create();
-        mAdapter = new DeviceListAdapter(this);
+        mAdapter = new DeviceListAdapter(this, this);
         mListView.setAdapter(mAdapter);
         swipe.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -73,21 +80,6 @@ public class BleActivity extends AppCompatActivity {
             }
         });
 
-        findViewById(R.id.tvConnect).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(BleActivity.this, PlayActivity.class));
-//                int selectPosition = mAdapter.getSelectPosition();
-//                Log.e(TAG, "onClick: " + selectPosition);
-//                if (selectPosition != -1) {
-//                    SearchResult searchResult = mAdapter.getmDataList().get(selectPosition);
-//                    String address = searchResult.getAddress();
-//                    ToastUtil.showMessage(address);
-//                } else {
-//                    ToastUtil.showMessage("no device or has no device selected!");
-//                }
-            }
-        });
         searchDevice(3, 3000, 2000);
         ClientManager.getClient().registerBluetoothStateListener(new BluetoothStateListener() {
             @Override
@@ -233,4 +225,44 @@ public class BleActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void beginConncet(String adress) {
+        connnect(adress);
+    }
+
+
+    private void connnect(final String macAdress) {
+        BleConnectOptions options = new BleConnectOptions.Builder()
+                .setConnectRetry(3)
+                // 连接如果失败重试3次
+                .setConnectTimeout(30000)
+                // 连接超时30s
+                .setServiceDiscoverRetry(3)
+                // 发现服务如果失败重试3次
+                .setServiceDiscoverTimeout(20000)
+                // 发现服务超时20s
+                .build();
+        ClientManager.getClient().connect(macAdress, options, new BleConnectResponse() {
+            @Override
+            public void onResponse(int code, BleGattProfile data) {
+                if (code == REQUEST_SUCCESS) {
+                    ToastUtil.showMessage("conncet sucess");
+                }
+                List<BleGattService> services = data.getServices();
+                for (int i = 0; i < services.size(); i++) {
+                    Log.e(TAG, "onResponse: " + services.get(i).getUUID().toString());
+                }
+              //  Log.e(TAG, "onResponse: " + MathUtils.toByteArray()Constants.CERTIFICATION);
+//                for (int i = 0; i < ; i++) {
+//
+//                }
+
+                ClientManager.getClient().write(macAdress, UUID.fromString(Constants.serviceUuid)
+                        , UUID.fromString(Constants
+                                .writeUiid),
+                        MathUtils.toByteArray(Constants.xieyi), mWriteRsp);
+                //   PlayActivity.start(BleActivity.this, macAdress);
+            }
+        });
+    }
 }

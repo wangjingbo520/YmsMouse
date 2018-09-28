@@ -29,11 +29,14 @@
         android:textColor="@color/themeColor"
         android:textSize="@dimen/sp_15" />
 
-    <CheckBox
-        android:id="@+id/checkbox"
+    <TextView
+        android:id="@+id/tvConnect"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:button="@drawable/checkbox" />
+        android:background="@drawable/bg_dialog_confirm"
+        android:padding="@dimen/dp_10"
+        android:text="connect"
+        android:textColor="@color/white" />
 
     <TextView
         android:id="@+id/device_RSSI"

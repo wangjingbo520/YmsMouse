@@ -1,6 +1,7 @@
 package com.mouse.app.adapter;
 
 import android.app.Activity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,11 +27,16 @@ public class DeviceListAdapter extends BaseAdapter implements Comparator<SearchR
     private Activity context;
 
     private List<SearchResult> mDataList;
-    private int tempPosition = -1;  //记录已经点击的CheckBox的位置
-    private int selectPosition = -1;
+    private AdressListenser adressListenser;
 
-    public DeviceListAdapter(Activity context) {
+
+    public interface AdressListenser {
+        void beginConncet(String adress);
+    }
+
+    public DeviceListAdapter(Activity context, AdressListenser adressListenser) {
         this.context = context;
+        this.adressListenser = adressListenser;
         mDataList = new ArrayList<SearchResult>();
     }
 
@@ -40,10 +46,6 @@ public class DeviceListAdapter extends BaseAdapter implements Comparator<SearchR
         notifyDataSetChanged();
     }
 
-    //返回当前CheckBox选中的位置,便于获取值.
-    public int getSelectPosition() {
-        return selectPosition;
-    }
 
     public List<SearchResult> getmDataList() {
         return mDataList;
@@ -56,7 +58,7 @@ public class DeviceListAdapter extends BaseAdapter implements Comparator<SearchR
     }
 
     @Override
-    public Object getItem(int position) {
+    public SearchResult getItem(int position) {
         return mDataList.get(position);
     }
 
@@ -75,7 +77,7 @@ public class DeviceListAdapter extends BaseAdapter implements Comparator<SearchR
         TextView deviceAddress;
         TextView deviceRSSI;
         TextView deviceState;
-        CheckBox checkbox;
+        TextView tvConnect;
     }
 
     @Override
@@ -89,7 +91,7 @@ public class DeviceListAdapter extends BaseAdapter implements Comparator<SearchR
             viewHolder.deviceName = (TextView) view.findViewById(R.id.device_name);
             viewHolder.deviceRSSI = (TextView) view.findViewById(R.id.device_RSSI);
             viewHolder.deviceState = (TextView) view.findViewById(R.id.state);
-            viewHolder.checkbox = view.findViewById(R.id.checkbox);
+            viewHolder.tvConnect = view.findViewById(R.id.tvConnect);
             view.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) view.getTag();
@@ -100,23 +102,13 @@ public class DeviceListAdapter extends BaseAdapter implements Comparator<SearchR
         viewHolder.deviceAddress.setText(result.getAddress());
         viewHolder.deviceRSSI.setText(String.format("Rssi: %d", result.rssi));
 
-        if (position == tempPosition) {
-            viewHolder.checkbox.setChecked(true);
-        } else {
-            viewHolder.checkbox.setChecked(false);
-        }
-
-        viewHolder.checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener
-                () {
-
+        viewHolder.tvConnect.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                if (isChecked) {
-                    tempPosition = position;
-                } else {
-                    tempPosition = -1;
+            public void onClick(View view) {
+                Log.e("---->", "onClick: " + getItem(position).getAddress());
+                if (adressListenser!=null){
+                    adressListenser.beginConncet(getItem(position).getAddress());
                 }
-                notifyDataSetChanged();
             }
         });
 
