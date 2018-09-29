@@ -12,6 +12,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -54,6 +55,7 @@ public class BleActivity extends BaseActivity implements DeviceListAdapter.Adres
     private LoadingDialog.Builder builder;
     private LoadingDialog dialog;
     private String macAdress;
+    private ImageView ivBlue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +69,7 @@ public class BleActivity extends BaseActivity implements DeviceListAdapter.Adres
         tvTitle = findViewById(R.id.tvTitle);
         mListView = findViewById(R.id.listView);
         swipe = findViewById(R.id.swipe);
+        ivBlue = findViewById(R.id.ivBlue);
         tvTitle.setText("Device List");
         mDevices = new ArrayList<>();
         builder = new LoadingDialog.Builder(this);
@@ -206,6 +209,7 @@ public class BleActivity extends BaseActivity implements DeviceListAdapter.Adres
             if (device.getName().endsWith("pets")) {
                 if (!mDevices.contains(device)) {
                     mDevices.add(device);
+                    ivBlue.setVisibility(View.VISIBLE);
                     mAdapter.setDataList(mDevices);
                 }
             }
@@ -216,6 +220,11 @@ public class BleActivity extends BaseActivity implements DeviceListAdapter.Adres
             dialog.dismiss();
             if (swipe.isRefreshing()) {
                 swipe.setRefreshing(false);
+            }
+            if (mAdapter.getCount() > 0) {
+                ivBlue.setVisibility(View.GONE);
+            } else {
+                ivBlue.setVisibility(View.VISIBLE);
             }
         }
 

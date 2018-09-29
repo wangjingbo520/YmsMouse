@@ -13,7 +13,6 @@ import com.mouse.app.utils.MathUtils;
 import com.mouse.app.utils.ToastUtil;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
-    private AlertDialog alertDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

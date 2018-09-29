@@ -2,11 +2,14 @@ package com.mouse.app;
 
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 
 import com.inuker.bluetooth.library.connect.listener.BleConnectStatusListener;
@@ -208,6 +211,28 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
      */
     private void startPlay() {
         myMainHandler.postDelayed(task, 100);
+    }
+
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+            new AlertDialog.Builder(this)
+                    .setMessage("Are you sure to quit?")
+                    .setPositiveButton("sure", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            finish();
+                        }
+                    }).setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            }).setCancelable(false).show();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
 }
