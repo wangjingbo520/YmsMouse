@@ -23,7 +23,7 @@ public class LauchActivity extends AppCompatActivity {
             switch (msg.what) {
                 case 200:
                    startActivity(new Intent(LauchActivity.this, MainActivity.class));
-                //    startActivity(new Intent(LauchActivity.this, PlayActivity.class));
+                //   startActivity(new Intent(LauchActivity.this, PlayActivity.class));
                     finish();
                     break;
                 default:

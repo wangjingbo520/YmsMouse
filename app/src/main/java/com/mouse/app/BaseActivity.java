@@ -4,9 +4,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.inuker.bluetooth.library.connect.response.BleNotifyResponse;
-import com.inuker.bluetooth.library.connect.response.BleReadResponse;
 import com.inuker.bluetooth.library.connect.response.BleWriteResponse;
 import com.inuker.bluetooth.library.utils.ByteUtils;
+import com.mouse.app.utils.MathUtils;
 import com.mouse.app.utils.ToastUtil;
 
 import java.util.UUID;
@@ -19,26 +19,18 @@ import static com.inuker.bluetooth.library.Constants.REQUEST_SUCCESS;
  */
 public class BaseActivity extends AppCompatActivity {
 
-//    private final BleReadResponse mReadRsp = new BleReadResponse() {
-//        @Override
-//        public void onResponse(int code, byte[] data) {
-//            if (code == REQUEST_SUCCESS) {
-//                mBtnRead.setText(String.format("read: %s", ByteUtils.byteToString(data)));
-//                CommonUtils.toast("success");
-//            } else {
-//                CommonUtils.toast("failed");
-//                mBtnRead.setText("read");
-//            }
-//        }
-//    };
+    private StringBuffer stringBuffer;
+    public StringBuffer total;
+    private String crc;
 
     public final BleWriteResponse mWriteRsp = new BleWriteResponse() {
         @Override
         public void onResponse(int code) {
             if (code == REQUEST_SUCCESS) {
-                ToastUtil.showMessage("写入成功");
+                Log.e("----->", "writeSucess");
+                onWriteSucess();
             } else {
-                ToastUtil.showMessage("写入失败");
+                Log.e("----->", "writeFailed");
             }
         }
     };
@@ -61,5 +53,40 @@ public class BaseActivity extends AppCompatActivity {
             }
         }
     };
+    private String s;
+
+    public void onWriteSucess() {
+
+    }
+
+
+    /**
+     * 所有操作的命令,前进等.
+     *
+     * @param cmd   操作类型,这里要是十六进制的字符串,记得
+     * @param speed 速度分20个等级
+     * @return
+     */
+    public byte[] getBytes(String cmd, int speed) {
+        stringBuffer = new StringBuffer();
+        stringBuffer.append(cmd).append(to(speed)).append("01");
+
+        String crc = MathUtils.makeChecksum(stringBuffer.toString());
+        total = new StringBuffer();
+        total.append("5a").append(cmd).append(Integer.toHexString(speed)).append("01")
+                .append(crc).append("a5");
+        return MathUtils.toByteArray(total.toString());
+    }
+
+
+    public String to(int speed) {
+        s = Integer.toHexString(speed);
+        if (s.length() <= 1) {
+            crc = "0" + s;
+        } else {
+            crc = s;
+        }
+        return crc;
+    }
 
 }

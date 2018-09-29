@@ -10,7 +10,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
+import android.text.TextUtils;
+import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -18,7 +19,6 @@ import com.inuker.bluetooth.library.connect.listener.BluetoothStateListener;
 import com.inuker.bluetooth.library.connect.options.BleConnectOptions;
 import com.inuker.bluetooth.library.connect.response.BleConnectResponse;
 import com.inuker.bluetooth.library.model.BleGattProfile;
-import com.inuker.bluetooth.library.model.BleGattService;
 import com.inuker.bluetooth.library.search.SearchRequest;
 import com.inuker.bluetooth.library.search.SearchResult;
 import com.inuker.bluetooth.library.search.response.SearchResponse;
@@ -53,6 +53,7 @@ public class BleActivity extends BaseActivity implements DeviceListAdapter.Adres
     private SwipeRefreshLayout swipe;
     private LoadingDialog.Builder builder;
     private LoadingDialog dialog;
+    private String macAdress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +67,7 @@ public class BleActivity extends BaseActivity implements DeviceListAdapter.Adres
         tvTitle = findViewById(R.id.tvTitle);
         mListView = findViewById(R.id.listView);
         swipe = findViewById(R.id.swipe);
-        tvTitle.setText("Ble");
+        tvTitle.setText("Device List");
         mDevices = new ArrayList<>();
         builder = new LoadingDialog.Builder(this);
         builder.setMessage("Finding Device").setCancelable(false);
@@ -80,11 +81,18 @@ public class BleActivity extends BaseActivity implements DeviceListAdapter.Adres
             }
         });
 
-        searchDevice(3, 3000, 2000);
+        searchDevice(2, 3000, 2000);
         ClientManager.getClient().registerBluetoothStateListener(new BluetoothStateListener() {
             @Override
             public void onBluetoothStateChanged(boolean openOrClosed) {
                 BluetoothLog.v(String.format("onBluetoothStateChanged %b", openOrClosed));
+            }
+        });
+
+        findViewById(R.id.flBack).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
             }
         });
     }
@@ -109,13 +117,13 @@ public class BleActivity extends BaseActivity implements DeviceListAdapter.Adres
             .ACCESS_COARSE_LOCATION, Manifest.permission.BLUETOOTH})
     void showRation(final PermissionRequest request) {
         new AlertDialog.Builder(this)
-                .setMessage("使用向阳宝贝需要申请相关权限，下一步将继续请求权限")
-                .setPositiveButton("下一步", new DialogInterface.OnClickListener() {
+                .setMessage("request for access")
+                .setPositiveButton("next", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         request.proceed();//继续执行请求
                     }
-                }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                }).setNegativeButton("cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 request.cancel();//取消执行请求
@@ -127,7 +135,7 @@ public class BleActivity extends BaseActivity implements DeviceListAdapter.Adres
             .ACCESS_COARSE_LOCATION, Manifest.permission.BLUETOOTH})
     void denied() {
         //您已经拒绝权限,继续申请
-        ToastUtil.showMessage("您已经拒绝权限,程序自动退出");
+        ToastUtil.showMessage("You have denied permission and the program quits automatically");
         finish();
     }
 
@@ -135,14 +143,15 @@ public class BleActivity extends BaseActivity implements DeviceListAdapter.Adres
             .ACCESS_COARSE_LOCATION, Manifest.permission.BLUETOOTH})
     void askAgain() {
         new AlertDialog.Builder(this)
-                .setMessage("您已经拒绝请求权限,请到设置页面打开权限")
-                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                .setMessage("You have declined the request permission, please go to the settings " +
+                        "page to open the permission")
+                .setPositiveButton("ok", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         startSetting(BleActivity.this, getPackageName());
 
                     }
-                }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                }).setNegativeButton("cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 finish();
@@ -179,7 +188,7 @@ public class BleActivity extends BaseActivity implements DeviceListAdapter.Adres
                 // 先扫BLE设备3次，每次3s
                 .searchBluetoothClassicDevice(jingdianTimes)
                 // 再扫经典蓝牙5s
-                .searchBluetoothLeDevice(bleTimes)
+//                .searchBluetoothLeDevice(bleTimes)
                 // 再扫BLE设备2s
                 .build();
         ClientManager.getClient().search(request, mSearchResponse);
@@ -194,9 +203,11 @@ public class BleActivity extends BaseActivity implements DeviceListAdapter.Adres
         @Override
         public void onDeviceFounded(SearchResult device) {
             BluetoothLog.w("MainActivity.onDeviceFounded " + device.device.getAddress());
-            if (!mDevices.contains(device)) {
-                mDevices.add(device);
-                mAdapter.setDataList(mDevices);
+            if (device.getName().endsWith("pets")) {
+                if (!mDevices.contains(device)) {
+                    mDevices.add(device);
+                    mAdapter.setDataList(mDevices);
+                }
             }
         }
 
@@ -247,22 +258,23 @@ public class BleActivity extends BaseActivity implements DeviceListAdapter.Adres
             public void onResponse(int code, BleGattProfile data) {
                 if (code == REQUEST_SUCCESS) {
                     ToastUtil.showMessage("conncet sucess");
+                    BleActivity.this.macAdress = macAdress;
+                    ClientManager.getClient().write(macAdress, UUID.fromString(Constants
+                                    .serviceUuid)
+                            , UUID.fromString(Constants
+                                    .writeUiid),
+                            MathUtils.toByteArray(Constants.xieyi), mWriteRsp);
                 }
-                List<BleGattService> services = data.getServices();
-                for (int i = 0; i < services.size(); i++) {
-                    Log.e(TAG, "onResponse: " + services.get(i).getUUID().toString());
-                }
-              //  Log.e(TAG, "onResponse: " + MathUtils.toByteArray()Constants.CERTIFICATION);
-//                for (int i = 0; i < ; i++) {
-//
-//                }
-
-                ClientManager.getClient().write(macAdress, UUID.fromString(Constants.serviceUuid)
-                        , UUID.fromString(Constants
-                                .writeUiid),
-                        MathUtils.toByteArray(Constants.xieyi), mWriteRsp);
-                //   PlayActivity.start(BleActivity.this, macAdress);
             }
         });
     }
+
+    @Override
+    public void onWriteSucess() {
+        super.onWriteSucess();
+        if (!TextUtils.isEmpty(macAdress)) {
+            PlayActivity.start(BleActivity.this, macAdress);
+        }
+    }
+
 }

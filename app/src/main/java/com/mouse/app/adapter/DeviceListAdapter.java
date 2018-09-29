@@ -6,8 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.inuker.bluetooth.library.search.SearchResult;
@@ -45,12 +43,6 @@ public class DeviceListAdapter extends BaseAdapter implements Comparator<SearchR
         mDataList.addAll(datas);
         notifyDataSetChanged();
     }
-
-
-    public List<SearchResult> getmDataList() {
-        return mDataList;
-    }
-
 
     @Override
     public int getCount() {
@@ -102,10 +94,10 @@ public class DeviceListAdapter extends BaseAdapter implements Comparator<SearchR
         viewHolder.deviceAddress.setText(result.getAddress());
         viewHolder.deviceRSSI.setText(String.format("Rssi: %d", result.rssi));
 
+
         viewHolder.tvConnect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.e("---->", "onClick: " + getItem(position).getAddress());
                 if (adressListenser!=null){
                     adressListenser.beginConncet(getItem(position).getAddress());
                 }

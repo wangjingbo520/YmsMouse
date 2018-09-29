@@ -37,7 +37,7 @@ public class VerticalSeekBar extends View {
     private int locationX;
     private int locationY = -1;
 
-    private int mInnerProgressWidth = 20;
+    private int mInnerProgressWidth = 25;
     private int mInnerProgressWidthPx;
 
     private int unSelectColor = 0xcc888888;
@@ -223,8 +223,6 @@ public class VerticalSeekBar extends View {
         if (locationY == -1) {
             locationX = width / 2;
             locationY = height / 2;
-
-            Log.i("xiaozhu", locationY + ":" + height);
         }
 
     }
@@ -268,6 +266,8 @@ public class VerticalSeekBar extends View {
                         listener.onStop(this, progress);
                     }
                 }
+                break;
+            default:
                 break;
         }
         return true;

@@ -4,7 +4,9 @@ import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
 import android.view.View;
 
 import com.inuker.bluetooth.library.connect.listener.BleConnectStatusListener;
@@ -14,20 +16,26 @@ import com.inuker.bluetooth.library.model.BleGattProfile;
 import com.inuker.bluetooth.library.utils.BluetoothLog;
 import com.mouse.app.utils.BluetoothUtils;
 import com.mouse.app.utils.ClientManager;
+import com.mouse.app.utils.Constants;
+import com.mouse.app.utils.MathUtils;
 import com.mouse.app.view.VerticalSeekBar;
 
+import java.lang.ref.WeakReference;
 import java.util.UUID;
 
 import static com.inuker.bluetooth.library.Constants.REQUEST_SUCCESS;
 import static com.inuker.bluetooth.library.Constants.STATUS_CONNECTED;
 
 
-public class PlayActivity extends BaseActivity implements View.OnClickListener {
+public class PlayActivity extends BaseActivity implements View.OnClickListener, VerticalSeekBar
+        .SlideChangeListener {
     private String macAdress;
     private BluetoothDevice mDevice;
     private boolean mConnected;
     private VerticalSeekBar verticalSeekBar;
-    private UUID mService;
+    private int speed = 10;
+    private String cmd = "00";
+    private MyMainHandler myMainHandler;
 
     public static void start(Context context, String macAdress) {
         Intent starter = new Intent(context, PlayActivity.class);
@@ -39,6 +47,7 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play);
+        verticalSeekBar = findViewById(R.id.verticalSeekBar);
         findViewById(R.id.llguide).setOnClickListener(this);
         findViewById(R.id.llhome).setOnClickListener(this);
         findViewById(R.id.lltop).setOnClickListener(this);
@@ -50,7 +59,11 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener {
         ClientManager.getClient().registerConnectStatusListener(macAdress,
                 mConnectStatusListener);
         verticalSeekBar = findViewById(R.id.verticalSeekBar);
-
+        verticalSeekBar.setMaxProgress(19);
+        verticalSeekBar.setProgress(speed);
+        verticalSeekBar.setOnSlideChangeListener(this);
+        myMainHandler = new MyMainHandler(this);
+        startPlay();
     }
 
     private final BleConnectStatusListener mConnectStatusListener = new BleConnectStatusListener() {
@@ -96,22 +109,105 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener {
                 startActivity(new Intent(this, MainActivity.class));
                 break;
             case R.id.lltop:
-//                ClientManager.getClient().write(macAdress, mService, mCharacter,
-//                        ByteUtils.stringToBytes(mEtInput.getText().toString()), mWriteRsp);
+                //前进
+                cmd = "01";
+                ClientManager.getClient().write(macAdress, UUID.fromString(Constants.serviceUuid)
+                        , UUID.fromString(Constants.writeUiid), getBytes(cmd, speed),
+                        mWriteRsp);
                 break;
             case R.id.llbottom:
-                startActivity(new Intent(this, MainActivity.class));
+                cmd = "02";
+                ClientManager.getClient().write(macAdress, UUID.fromString(Constants.serviceUuid)
+                        , UUID.fromString(Constants.writeUiid), getBytes(cmd, speed),
+                        mWriteRsp);
                 break;
             case R.id.llleft:
-                startActivity(new Intent(this, MainActivity.class));
+                cmd = "04";
+                ClientManager.getClient().write(macAdress, UUID.fromString(Constants.serviceUuid)
+                        , UUID.fromString(Constants.writeUiid), getBytes(cmd, speed),
+                        mWriteRsp);
                 break;
             case R.id.llright:
-                startActivity(new Intent(this, MainActivity.class));
+                cmd = "08";
+                ClientManager.getClient().write(macAdress, UUID.fromString(Constants.serviceUuid)
+                        , UUID.fromString(Constants.writeUiid), getBytes(cmd, speed),
+                        mWriteRsp);
                 break;
             default:
                 break;
         }
     }
 
+
+    @Override
+    public void onStart(VerticalSeekBar slideView, int progress) {
+
+    }
+
+    @Override
+    public void onProgress(VerticalSeekBar slideView, int progress) {
+
+    }
+
+    @Override
+    public void onStop(VerticalSeekBar slideView, int progress) {
+        Log.e("onStop", "onStop: " + progress);
+        speed = progress;
+        go();
+    }
+
+    private void go() {
+        ClientManager.getClient().write(macAdress, UUID.fromString(Constants.serviceUuid)
+                , UUID.fromString(Constants.writeUiid), getBytes(cmd, speed),
+                mWriteRsp);
+
+    }
+
+
+    private final Runnable task = new Runnable() {
+        @Override
+        public void run() {
+            myMainHandler.sendEmptyMessage(1);
+        }
+    };
+
+
+    public static class MyMainHandler extends Handler {
+        WeakReference<PlayActivity> mActivityReference;
+
+        MyMainHandler(PlayActivity activity) {
+            mActivityReference = new WeakReference<>(activity);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if (mActivityReference.get() == null) {
+                return;
+            }
+            switch (msg.what) {
+                case 1:
+                    mActivityReference.get().go();
+                    mActivityReference.get().myMainHandler.postDelayed(mActivityReference.get()
+                            .task, 100);
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        myMainHandler.removeCallbacks(task);
+    }
+
+    /**
+     * 开启线程刷新
+     */
+    private void startPlay() {
+        myMainHandler.postDelayed(task, 100);
+    }
 
 }

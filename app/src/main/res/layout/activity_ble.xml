@@ -11,34 +11,34 @@
         android:id="@+id/toolbar_main"
         layout="@layout/toolbar_layout" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/themeColor"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:padding="@dimen/dp_10">
+    <!--<LinearLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:background="@color/themeColor"-->
+    <!--android:gravity="center"-->
+    <!--android:orientation="horizontal"-->
+    <!--android:padding="@dimen/dp_10">-->
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Connect The Toy"
-            android:textColor="@color/white"
-            android:textSize="@dimen/dp_20" />
+    <!--<TextView-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:text="Connect The Toy"-->
+    <!--android:textColor="@color/white"-->
+    <!--android:textSize="@dimen/dp_20" />-->
 
-        <TextView
-            android:id="@+id/tvConnect"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/dp_15"
-            android:background="@drawable/bg_menu"
-            android:padding="@dimen/dp_5"
-            android:text="Match"
-            android:textColor="@color/themeColor"
-            android:textSize="@dimen/dp_20" />
+    <!--<TextView-->
+    <!--android:id="@+id/tvConnect"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginLeft="@dimen/dp_15"-->
+    <!--android:background="@drawable/bg_menu"-->
+    <!--android:padding="@dimen/dp_5"-->
+    <!--android:text="Match"-->
+    <!--android:textColor="@color/themeColor"-->
+    <!--android:textSize="@dimen/dp_20" />-->
 
 
-    </LinearLayout>
+    <!--</LinearLayout>-->
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe"
@@ -46,10 +46,10 @@
         android:layout_height="match_parent">
 
         <ListView
-            android:choiceMode="singleChoice"
             android:id="@+id/listView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:choiceMode="singleChoice" />
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
