@@ -218,7 +218,7 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
             new AlertDialog.Builder(this)
-                    .setMessage("Are you sure to quit?")
+                    .setMessage("The device will be disconnected,Are you sure to quit?")
                     .setPositiveButton("sure", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {

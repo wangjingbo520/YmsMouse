@@ -1,15 +1,7 @@
 package com.mouse.app;
 
-import android.Manifest;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
@@ -34,13 +26,6 @@ import com.mouse.app.view.LoadingDialog;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
-import permissions.dispatcher.NeedsPermission;
-import permissions.dispatcher.OnNeverAskAgain;
-import permissions.dispatcher.OnPermissionDenied;
-import permissions.dispatcher.OnShowRationale;
-import permissions.dispatcher.PermissionRequest;
-import permissions.dispatcher.RuntimePermissions;
 
 import static com.inuker.bluetooth.library.Constants.REQUEST_SUCCESS;
 
@@ -108,6 +93,8 @@ public class BleActivity extends BaseActivity implements DeviceListAdapter.Adres
 
     private void searchDevice(int searchTimes, int bleTimes, int jingdianTimes) {
         if (dialog != null && !dialog.isShowing()) {
+            builder.setMessage("Finding Device").setCancelable(false);
+            dialog = builder.create();
             dialog.show();
         }
         SearchRequest request = new SearchRequest.Builder().searchBluetoothLeDevice(bleTimes,
@@ -166,14 +153,17 @@ public class BleActivity extends BaseActivity implements DeviceListAdapter.Adres
     protected void onPause() {
         super.onPause();
         ClientManager.getClient().stopSearch();
+        dialog.dismiss();
     }
 
 
     @Override
     public void beginConncet(String adress) {
+        builder.setMessage("Connecting.....").setCancelable(false);
+        dialog = builder.create();
+        dialog.show();
         connnect(adress);
     }
-
 
     private void connnect(final String macAdress) {
         BleConnectOptions options = new BleConnectOptions.Builder()
@@ -190,7 +180,7 @@ public class BleActivity extends BaseActivity implements DeviceListAdapter.Adres
             @Override
             public void onResponse(int code, BleGattProfile data) {
                 if (code == REQUEST_SUCCESS) {
-                    ToastUtil.showMessage("conncet sucess");
+                    dialog.dismiss();
                     BleActivity.this.macAdress = macAdress;
                     ClientManager.getClient().write(macAdress, UUID.fromString(Constants
                                     .serviceUuid)
