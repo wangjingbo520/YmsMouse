@@ -18,7 +18,8 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tvMenu:
-                startActivity(new Intent(this, GuideActivity.class));
+                startActivity(new Intent(this, MainActivity.class));
+                finish();
                 break;
             default:
                 break;
