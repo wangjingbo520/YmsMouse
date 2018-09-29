@@ -40,7 +40,9 @@
         </activity>
         <activity android:name=".GuideActivity" />
         <activity android:name=".MenuActivity" />
-        <activity android:name=".BleActivity" />
+        <activity
+            android:name=".BleActivity"
+            android:launchMode="singleTask" />
         <activity android:name=".MainActivity" />
         <activity
             android:name=".PlayActivity"

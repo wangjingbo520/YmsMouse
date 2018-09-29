@@ -44,7 +44,7 @@ import permissions.dispatcher.RuntimePermissions;
 
 import static com.inuker.bluetooth.library.Constants.REQUEST_SUCCESS;
 
-@RuntimePermissions
+
 public class BleActivity extends BaseActivity implements DeviceListAdapter.AdressListenser {
     private String TAG = BleActivity.class.getSimpleName();
     private DeviceListAdapter mAdapter;
@@ -61,7 +61,6 @@ public class BleActivity extends BaseActivity implements DeviceListAdapter.Adres
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ble);
-        BleActivityPermissionsDispatcher.needWithPermissionCheck(this);
         initView();
     }
 
@@ -100,81 +99,6 @@ public class BleActivity extends BaseActivity implements DeviceListAdapter.Adres
         });
     }
 
-    @NeedsPermission({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission
-            .ACCESS_COARSE_LOCATION, Manifest.permission.BLUETOOTH})
-    void need() {
-        if (!ClientManager.getClient().isBluetoothOpened()) {
-            ClientManager.getClient().openBluetooth();
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        BleActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode,
-                grantResults);
-    }
-
-    @OnShowRationale({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission
-            .ACCESS_COARSE_LOCATION, Manifest.permission.BLUETOOTH})
-    void showRation(final PermissionRequest request) {
-        new AlertDialog.Builder(this)
-                .setMessage("request for access")
-                .setPositiveButton("next", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        request.proceed();//继续执行请求
-                    }
-                }).setNegativeButton("cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                request.cancel();//取消执行请求
-            }
-        }).show();
-    }
-
-    @OnPermissionDenied({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission
-            .ACCESS_COARSE_LOCATION, Manifest.permission.BLUETOOTH})
-    void denied() {
-        //您已经拒绝权限,继续申请
-        ToastUtil.showMessage("You have denied permission and the program quits automatically");
-        finish();
-    }
-
-    @OnNeverAskAgain({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission
-            .ACCESS_COARSE_LOCATION, Manifest.permission.BLUETOOTH})
-    void askAgain() {
-        new AlertDialog.Builder(this)
-                .setMessage("You have declined the request permission, please go to the settings " +
-                        "page to open the permission")
-                .setPositiveButton("ok", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        startSetting(BleActivity.this, getPackageName());
-
-                    }
-                }).setNegativeButton("cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                finish();
-            }
-        }).show();
-    }
-
-    private void startSetting(Context context, String packageName) {
-        Intent intent = new Intent();
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        if (Build.VERSION.SDK_INT >= 9) {
-            intent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
-            intent.setData(Uri.fromParts("package", packageName, null));
-        } else if (Build.VERSION.SDK_INT <= 8) {
-            intent.setAction(Intent.ACTION_VIEW);
-            intent.setClassName("com.android.settings", "com.android.settings.InstalledAppDetails");
-            intent.putExtra("com.android.settings.ApplicationPkgName", packageName);
-        }
-        context.startActivity(intent);
-    }
 
     @Override
     protected void onResume() {
@@ -209,7 +133,7 @@ public class BleActivity extends BaseActivity implements DeviceListAdapter.Adres
             if (device.getName().endsWith("pets")) {
                 if (!mDevices.contains(device)) {
                     mDevices.add(device);
-                    ivBlue.setVisibility(View.VISIBLE);
+                    ivBlue.setVisibility(View.GONE);
                     mAdapter.setDataList(mDevices);
                 }
             }
