@@ -114,27 +114,19 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
             case R.id.lltop:
                 //前进
                 cmd = "01";
-                ClientManager.getClient().write(macAdress, UUID.fromString(Constants.serviceUuid)
-                        , UUID.fromString(Constants.writeUiid), getBytes(cmd, speed),
-                        mWriteRsp);
+                writeBle(macAdress, cmd, speed);
                 break;
             case R.id.llbottom:
                 cmd = "02";
-                ClientManager.getClient().write(macAdress, UUID.fromString(Constants.serviceUuid)
-                        , UUID.fromString(Constants.writeUiid), getBytes(cmd, speed),
-                        mWriteRsp);
+                writeBle(macAdress, cmd, speed);
                 break;
             case R.id.llleft:
                 cmd = "04";
-                ClientManager.getClient().write(macAdress, UUID.fromString(Constants.serviceUuid)
-                        , UUID.fromString(Constants.writeUiid), getBytes(cmd, speed),
-                        mWriteRsp);
+                writeBle(macAdress, cmd, speed);
                 break;
             case R.id.llright:
                 cmd = "08";
-                ClientManager.getClient().write(macAdress, UUID.fromString(Constants.serviceUuid)
-                        , UUID.fromString(Constants.writeUiid), getBytes(cmd, speed),
-                        mWriteRsp);
+                writeBle(macAdress, cmd, speed);
                 break;
             default:
                 break;

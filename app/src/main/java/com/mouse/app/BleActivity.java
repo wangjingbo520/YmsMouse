@@ -186,7 +186,8 @@ public class BleActivity extends BaseActivity implements DeviceListAdapter.Adres
                                     .serviceUuid)
                             , UUID.fromString(Constants
                                     .writeUiid),
-                            MathUtils.toByteArray(Constants.xieyi), mWriteRsp);
+                            MathUtils.hexStringToBytes("5a" + randomHexString(12)
+                                    + makeChecksum(randomHexString(12)) + "a5"), mWriteRsp);
                 }
             }
         });

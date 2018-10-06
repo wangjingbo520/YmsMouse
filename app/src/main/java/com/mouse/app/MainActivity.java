@@ -15,6 +15,7 @@ import android.view.KeyEvent;
 import android.view.View;
 
 import com.mouse.app.utils.ClientManager;
+import com.mouse.app.utils.Constants;
 import com.mouse.app.utils.MathUtils;
 import com.mouse.app.utils.ToastUtil;
 
@@ -27,6 +28,26 @@ import permissions.dispatcher.RuntimePermissions;
 
 @RuntimePermissions
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+
+    public byte[] hexStringToBytes(String hexString) {
+        if (hexString == null || hexString.equals("")) {
+            return null;
+        }
+        hexString = hexString.toUpperCase();
+        int length = hexString.length() / 2;
+        char[] hexChars = hexString.toCharArray();
+        byte[] d = new byte[length];
+        for (int i = 0; i < length; i++) {
+            int pos = i * 2;
+            d[i] = (byte) (charToByte(hexChars[pos]) << 4 | charToByte(hexChars[pos + 1]));
+
+        }
+        return d;
+    }
+
+    private static byte charToByte(char c) {
+        return (byte) "0123456789ABCDEF".indexOf(c);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +63,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv1:
-                startActivity(new Intent(this, MenuActivity.class));
+                byte[] bytes = MathUtils.hexStringToBytes("5a" + MathUtils.randomHexString(12)
+                        + MathUtils.makeChecksum(MathUtils.randomHexString(12)) + "a5");
+                Log.e("---len", bytes.length+"" );
+                for (int i = 0; i < bytes.length; i++) {
+                    Log.e("---->", bytes[i] + "");
+
+                }
+
+                for (int i = 0; i < Constants.CERTIFICATION.length; i++) {
+                    Log.e("---->xieyi", Constants.CERTIFICATION[i] + "");
+
+                }
+
+
+          //      startActivity(new Intent(this, MenuActivity.class));
                 break;
             case R.id.tv2:
                 startActivity(new Intent(this, GuideActivity.class));
@@ -54,7 +89,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
         }
     }
-
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
