@@ -8,10 +8,6 @@ package com.mouse.app.utils;
 public class Constants {
     public static String serviceUuid = "0000ae00-0000-1000-8000-00805f9b34fb";
     public static String writeUiid = "0000ae01-0000-1000-8000-00805f9b34fb";
-    public static String readUiid = "0000ae02-0000-1000-8000-00805f9b34fb";
-    public static String xieyi = "5a12ac3498f35ddaa5";
-
-    public static String ahead = "5a010a000ba5";
     /**
      * 认证协议
      */

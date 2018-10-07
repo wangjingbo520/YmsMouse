@@ -33,7 +33,7 @@ public class BaseActivity extends AppCompatActivity {
         }
     };
 
-    public void writeBle(String macAdress, String cmd, int speed) {
+    public void playBle(String macAdress, String cmd, int speed) {
         //低八位
         String crc = MathUtils.makeChecksum(cmd + convertDecimalToBinary(speed) + XX);
         String data = "5a" + cmd + convertDecimalToBinary(speed) + XX + crc + "a5";

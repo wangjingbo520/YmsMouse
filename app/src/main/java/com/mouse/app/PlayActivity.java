@@ -97,6 +97,7 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
                 BluetoothLog.v(String.format("profile:\n%s", profile));
                 if (code == REQUEST_SUCCESS) {
                     //重连成功
+
                 }
             }
         });
@@ -114,19 +115,19 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
             case R.id.lltop:
                 //前进
                 cmd = "01";
-                writeBle(macAdress, cmd, speed);
+                playBle(macAdress, cmd, speed);
                 break;
             case R.id.llbottom:
                 cmd = "02";
-                writeBle(macAdress, cmd, speed);
+                playBle(macAdress, cmd, speed);
                 break;
             case R.id.llleft:
                 cmd = "04";
-                writeBle(macAdress, cmd, speed);
+                playBle(macAdress, cmd, speed);
                 break;
             case R.id.llright:
                 cmd = "08";
-                writeBle(macAdress, cmd, speed);
+                playBle(macAdress, cmd, speed);
                 break;
             default:
                 break;
@@ -146,18 +147,9 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
 
     @Override
     public void onStop(VerticalSeekBar slideView, int progress) {
-        Log.e("onStop", "onStop: " + progress);
         speed = progress;
-        go();
+        playBle(macAdress, cmd, speed);
     }
-
-    private void go() {
-        ClientManager.getClient().write(macAdress, UUID.fromString(Constants.serviceUuid)
-                , UUID.fromString(Constants.writeUiid), getBytes(cmd, speed),
-                mWriteRsp);
-
-    }
-
 
     private final Runnable task = new Runnable() {
         @Override
@@ -165,7 +157,6 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
             myMainHandler.sendEmptyMessage(1);
         }
     };
-
 
     public static class MyMainHandler extends Handler {
         WeakReference<PlayActivity> mActivityReference;
@@ -182,7 +173,8 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
             }
             switch (msg.what) {
                 case 1:
-                    mActivityReference.get().go();
+                    mActivityReference.get().playBle(mActivityReference.get()
+                            .macAdress, mActivityReference.get().cmd, mActivityReference.get().speed);
                     mActivityReference.get().myMainHandler.postDelayed(mActivityReference.get()
                             .task, 100);
                     break;
