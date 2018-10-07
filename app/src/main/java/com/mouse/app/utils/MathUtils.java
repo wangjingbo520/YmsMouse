@@ -1,6 +1,6 @@
 package com.mouse.app.utils;
 
-import android.text.TextUtils;
+import android.util.Log;
 
 import java.util.Random;
 
@@ -10,69 +10,8 @@ import java.util.Random;
  * describe
  */
 public class MathUtils {
-//    public static byte[] toByteArray(String hexString) {
-//        if (TextUtils.isEmpty(hexString))
-//            throw new IllegalArgumentException("this hexString must not be empty");
-//
-//        hexString = hexString.toLowerCase();
-//        final byte[] byteArray = new byte[hexString.length() / 2];
-//        int k = 0;
-//        for (int i = 0; i < byteArray.length; i++) {
-//            //因为是16进制，最多只会占用4位，转换成字节需要两个16进制的字符，高位在先
-//            byte high = (byte) (Character.digit(hexString.charAt(k), 16) & 0xff);
-//            byte low = (byte) (Character.digit(hexString.charAt(k + 1), 16) & 0xff);
-//            byteArray[i] = (byte) (high << 4 | low);
-//            k += 2;
-//        }
-//        return byteArray;
-//    }
-
-    public static String randomHexString(int len) {
-        try {
-            StringBuffer result = new StringBuffer();
-            for (int i = 0; i < len; i++) {
-                result.append(Integer.toHexString(new Random().nextInt(16)));
-            }
-            return result.toString().toUpperCase() + MathUtils.makeChecksum(result
-                    .toString().toUpperCase());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-
-    /**
-     * 求和
-     *
-     * @param data
-     * @return
-     */
-    public static String makeChecksum(String data) {
-        if (data == null || data.equals("")) {
-            return "";
-        }
-        int total = 0;
-        int len = data.length();
-        int num = 0;
-        while (num < len) {
-            String s = data.substring(num, num + 2);
-            System.out.println(s);
-            total += Integer.parseInt(s, 16);
-            num = num + 2;
-        }
-        /**
-         * 用256求余最大是255，即16进制的FF
-         */
-        int mod = total % 256;
-        String hex = Integer.toHexString(mod);
-        len = hex.length();
-        // 如果不够校验位的长度，补0,这里用的是两位校验
-        if (len < 2) {
-            hex = "0" + hex;
-        }
-        return hex;
-    }
+    private static final char[] bcdLookup = new char[]{'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B',
+            'C', 'D', 'E', 'F'};
 
     public static byte[] hexStringToBytes(String hexString) {
         if (hexString == null || hexString.equals("")) {
@@ -94,5 +33,75 @@ public class MathUtils {
         return (byte) "0123456789ABCDEF".indexOf(c);
     }
 
+    public static String makeChecksum(String data) {
+        int total = 0;
+        int len = data.length();
+        int num = 0;
+        while (num < len) {
+            String s = data.substring(num, num + 2);
+            total += Integer.parseInt(s, 16);
+            num = num + 2;
+        }
+        /**
+         * 用65535求余最大是65534，即16进制的FFFF
+         */
+        int mod = total % 65535;
+       // String hex = Integer.toHexString(mod);
+        String hex = Integer.toHexString(mod& 0xff);
+        String hex2 = Integer.toHexString(mod & 0xff);
+        Log.e("makeChecksum", hex2);
+        len = hex.length();
+        // 如果不够校验位的长度，补0
+        switch (len) {
+            case 1:
+                hex = "0" + hex;
+                break;
+//            case 2:
+//                hex = "00" + hex;
+//                break;
+//            case 3:
+//                hex = "0" + hex;
+//                break;
+            default:
+                break;
+        }
+        return hex;
+    }
+
+    /**
+     * 将十进制转成十六进制
+     *
+     * @param value
+     * @return
+     */
+    public static String convertDecimalToBinary(int value) {
+        String str;
+        String a = Integer.toHexString(value);
+        if (a.length() == 1) {
+            str = "0" + a;
+        } else {
+            str = a;
+        }
+        return str;
+    }
+
+    /**
+     * KEY0+KEY1+KEY2+KEY3+KEY4+KEY5  十六进制字符串随机数
+     *
+     * @param len
+     * @return
+     */
+    public static String randomHexString(int len) {
+        try {
+            StringBuffer result = new StringBuffer();
+            for (int i = 0; i < len; i++) {
+                result.append(Integer.toHexString(new Random().nextInt(16)));
+            }
+            return result.toString().toUpperCase();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
 }

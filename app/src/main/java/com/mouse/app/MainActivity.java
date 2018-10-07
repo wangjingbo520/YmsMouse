@@ -6,10 +6,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -26,8 +26,8 @@ import permissions.dispatcher.OnShowRationale;
 import permissions.dispatcher.PermissionRequest;
 import permissions.dispatcher.RuntimePermissions;
 
-import static com.mouse.app.BaseActivity.randomHexString;
 import static com.mouse.app.utils.MathUtils.makeChecksum;
+import static com.mouse.app.utils.MathUtils.randomHexString;
 
 @RuntimePermissions
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -66,24 +66,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv1:
-                String randomString = randomHexString(12);
-                Log.e("randomString", randomString);
-                Log.e("he", makeChecksum(randomString));
-
-                String message = "5a" + randomString + makeChecksum(randomString) + "a5";
-                Log.e("---len", message);
-                byte[] bytes = MathUtils.hexStringToBytes(message);
-                for (int i = 0; i < bytes.length; i++) {
-                    Log.e("---->haha", bytes[i] + "");
-
-                }
-
-                for (int i = 0; i < Constants.CERTIFICATION.length; i++) {
-                    Log.e("---->xieyi", Constants.CERTIFICATION[i] + "");
-
-                }
-
-
                 //      startActivity(new Intent(this, MenuActivity.class));
                 break;
             case R.id.tv2:

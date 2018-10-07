@@ -28,6 +28,8 @@ import java.util.List;
 import java.util.UUID;
 
 import static com.inuker.bluetooth.library.Constants.REQUEST_SUCCESS;
+import static com.mouse.app.utils.MathUtils.makeChecksum;
+import static com.mouse.app.utils.MathUtils.randomHexString;
 
 
 public class BleActivity extends BaseActivity implements DeviceListAdapter.AdressListenser {
@@ -182,12 +184,14 @@ public class BleActivity extends BaseActivity implements DeviceListAdapter.Adres
                 if (code == REQUEST_SUCCESS) {
                     dialog.dismiss();
                     BleActivity.this.macAdress = macAdress;
+                    String randomString = randomHexString(12);
+                    String message = "5a" + randomString + makeChecksum(randomString) + "a5";
+                    byte[] bytes = MathUtils.hexStringToBytes(message);
                     ClientManager.getClient().write(macAdress, UUID.fromString(Constants
                                     .serviceUuid)
                             , UUID.fromString(Constants
                                     .writeUiid),
-                            MathUtils.hexStringToBytes("5a" + randomHexString(12)
-                                    + makeChecksum(randomHexString(12)) + "a5"), mWriteRsp);
+                            bytes, mWriteRsp);
                 }
             }
         });
