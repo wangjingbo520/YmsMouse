@@ -26,6 +26,9 @@ import permissions.dispatcher.OnShowRationale;
 import permissions.dispatcher.PermissionRequest;
 import permissions.dispatcher.RuntimePermissions;
 
+import static com.mouse.app.BaseActivity.randomHexString;
+import static com.mouse.app.utils.MathUtils.makeChecksum;
+
 @RuntimePermissions
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -63,11 +66,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv1:
-                byte[] bytes = MathUtils.hexStringToBytes("5a" + MathUtils.randomHexString(12)
-                        + MathUtils.makeChecksum(MathUtils.randomHexString(12)) + "a5");
-                Log.e("---len", bytes.length+"" );
+                String randomString = randomHexString(12);
+                Log.e("randomString", randomString);
+                Log.e("he", makeChecksum(randomString));
+
+                String message = "5a" + randomString + makeChecksum(randomString) + "a5";
+                Log.e("---len", message);
+                byte[] bytes = MathUtils.hexStringToBytes(message);
                 for (int i = 0; i < bytes.length; i++) {
-                    Log.e("---->", bytes[i] + "");
+                    Log.e("---->haha", bytes[i] + "");
 
                 }
 
@@ -77,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
 
 
-          //      startActivity(new Intent(this, MenuActivity.class));
+                //      startActivity(new Intent(this, MenuActivity.class));
                 break;
             case R.id.tv2:
                 startActivity(new Intent(this, GuideActivity.class));

@@ -75,8 +75,10 @@ public class BaseActivity extends AppCompatActivity {
             for (int i = 0; i < len; i++) {
                 result.append(Integer.toHexString(new Random().nextInt(16)));
             }
-            return result.toString().toUpperCase() + MathUtils.makeChecksum(result
-                    .toString().toUpperCase());
+            return result.toString().toUpperCase()
+//                    + MathUtils.makeChecksum(result
+//                    .toString().toUpperCase())
+                    ;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -115,6 +117,7 @@ public class BaseActivity extends AppCompatActivity {
         }
         return hex;
     }
+
 
 
     /**
