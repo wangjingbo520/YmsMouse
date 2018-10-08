@@ -54,13 +54,10 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
         verticalSeekBar = findViewById(R.id.verticalSeekBar);
         findViewById(R.id.llguide).setOnClickListener(this);
         findViewById(R.id.llhome).setOnClickListener(this);
-        findViewById(R.id.lltop).setOnClickListener(this);
-        findViewById(R.id.llbottom).setOnClickListener(this);
-        findViewById(R.id.llleft).setOnClickListener(this);
-        findViewById(R.id.llright).setOnClickListener(this);
-
         findViewById(R.id.lltop).setOnTouchListener(this);
-
+        findViewById(R.id.llbottom).setOnTouchListener(this);
+        findViewById(R.id.llleft).setOnTouchListener(this);
+        findViewById(R.id.llright).setOnTouchListener(this);
         macAdress = getIntent().getStringExtra("macAdress");
         mDevice = BluetoothUtils.getRemoteDevice(macAdress);
         ClientManager.getClient().registerConnectStatusListener(macAdress,
@@ -100,7 +97,6 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
                 BluetoothLog.v(String.format("profile:\n%s", profile));
                 if (code == REQUEST_SUCCESS) {
                     //重连成功
-
                 }
             }
         });
@@ -120,7 +116,6 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
         }
     }
 
-
     @Override
     public void onStart(VerticalSeekBar slideView, int progress) {
 
@@ -133,7 +128,7 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
 
     @Override
     public void onStop(VerticalSeekBar slideView, int progress) {
-        speed = progress;
+        this.speed = progress;
     }
 
     private final Runnable task = new Runnable() {
@@ -171,7 +166,7 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
             myMainHandler.postDelayed(task, 100);
         } else if (action == MotionEvent.ACTION_UP) {
             // 松开
-            cmd = "00";
+            this.cmd = "00";
             myMainHandler.sendEmptyMessage(0);
         }
         return false;
