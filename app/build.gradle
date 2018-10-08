@@ -10,12 +10,27 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+
+    signingConfigs {
+        commonConfig {
+            keyAlias 'YmsMouse'
+            keyPassword '123456789'
+            storeFile file('YmsMouse.jks')
+            storePassword '123456789'
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.commonConfig
+        }
+        debug {
+            signingConfig signingConfigs.commonConfig
         }
     }
+
 }
 
 dependencies {

@@ -46,10 +46,7 @@ public class MathUtils {
          * 用65535求余最大是65534，即16进制的FFFF
          */
         int mod = total % 65535;
-       // String hex = Integer.toHexString(mod);
         String hex = Integer.toHexString(mod& 0xff);
-        String hex2 = Integer.toHexString(mod & 0xff);
-        Log.e("makeChecksum", hex2);
         len = hex.length();
         // 如果不够校验位的长度，补0
         switch (len) {

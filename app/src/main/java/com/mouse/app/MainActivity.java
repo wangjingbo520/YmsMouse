@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv1:
-                //      startActivity(new Intent(this, MenuActivity.class));
+                startActivity(new Intent(this, MenuActivity.class));
                 break;
             case R.id.tv2:
                 startActivity(new Intent(this, GuideActivity.class));

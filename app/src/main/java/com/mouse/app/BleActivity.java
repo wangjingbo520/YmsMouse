@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static com.inuker.bluetooth.library.Constants.REQUEST_FAILED;
 import static com.inuker.bluetooth.library.Constants.REQUEST_SUCCESS;
 import static com.mouse.app.utils.MathUtils.makeChecksum;
 import static com.mouse.app.utils.MathUtils.randomHexString;
@@ -119,12 +120,12 @@ public class BleActivity extends BaseActivity implements DeviceListAdapter.Adres
         @Override
         public void onDeviceFounded(SearchResult device) {
             BluetoothLog.w("MainActivity.onDeviceFounded " + device.device.getAddress());
-            if (device.getName().endsWith("pets")) {
-                if (!mDevices.contains(device)) {
-                    mDevices.add(device);
-                    ivBlue.setVisibility(View.GONE);
-                    mAdapter.setDataList(mDevices);
-                }
+//            if (device.getName().endsWith("pets")) {
+            if (!mDevices.contains(device)) {
+                mDevices.add(device);
+                ivBlue.setVisibility(View.GONE);
+                mAdapter.setDataList(mDevices);
+//                }
             }
         }
 
@@ -171,7 +172,7 @@ public class BleActivity extends BaseActivity implements DeviceListAdapter.Adres
         BleConnectOptions options = new BleConnectOptions.Builder()
                 .setConnectRetry(3)
                 // 连接如果失败重试3次
-                .setConnectTimeout(30000)
+                .setConnectTimeout(20000)
                 // 连接超时30s
                 .setServiceDiscoverRetry(3)
                 // 发现服务如果失败重试3次
@@ -192,6 +193,8 @@ public class BleActivity extends BaseActivity implements DeviceListAdapter.Adres
                             , UUID.fromString(Constants
                                     .writeUiid),
                             bytes, mWriteRsp);
+                } else if (code == REQUEST_FAILED) {
+                    ToastUtil.showMessage("connect failed");
                 }
             }
         });
