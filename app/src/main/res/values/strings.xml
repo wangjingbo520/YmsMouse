@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">Mouse</string>
+    <string name="app_english">英语</string>
+    <string name="chose">请选择语言</string>
+    <string name="app_chinase">中文</string>
     <string name="btn_sure">确定</string>
     <string name="btn_cancel">取消</string>
     <string name="ble_not_supported">BLE is not supported</string>

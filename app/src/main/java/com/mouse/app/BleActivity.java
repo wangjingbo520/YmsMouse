@@ -120,12 +120,12 @@ public class BleActivity extends BaseActivity implements DeviceListAdapter.Adres
         @Override
         public void onDeviceFounded(SearchResult device) {
             BluetoothLog.w("MainActivity.onDeviceFounded " + device.device.getAddress());
-//            if (device.getName().endsWith("pets")) {
-            if (!mDevices.contains(device)) {
-                mDevices.add(device);
-                ivBlue.setVisibility(View.GONE);
-                mAdapter.setDataList(mDevices);
-//                }
+            if (device.getName().endsWith("pets")) {
+                if (!mDevices.contains(device)) {
+                    mDevices.add(device);
+                    ivBlue.setVisibility(View.GONE);
+                    mAdapter.setDataList(mDevices);
+                }
             }
         }
 

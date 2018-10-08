@@ -10,6 +10,7 @@ import android.os.Message;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 
 import com.inuker.bluetooth.library.connect.listener.BleConnectStatusListener;
@@ -31,7 +32,7 @@ import static com.inuker.bluetooth.library.Constants.STATUS_CONNECTED;
 
 
 public class PlayActivity extends BaseActivity implements View.OnClickListener, VerticalSeekBar
-        .SlideChangeListener {
+        .SlideChangeListener, View.OnTouchListener {
     private String macAdress;
     private BluetoothDevice mDevice;
     private boolean mConnected;
@@ -57,6 +58,9 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
         findViewById(R.id.llbottom).setOnClickListener(this);
         findViewById(R.id.llleft).setOnClickListener(this);
         findViewById(R.id.llright).setOnClickListener(this);
+
+        findViewById(R.id.lltop).setOnTouchListener(this);
+
         macAdress = getIntent().getStringExtra("macAdress");
         mDevice = BluetoothUtils.getRemoteDevice(macAdress);
         ClientManager.getClient().registerConnectStatusListener(macAdress,
@@ -66,7 +70,6 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
         verticalSeekBar.setProgress(speed);
         verticalSeekBar.setOnSlideChangeListener(this);
         myMainHandler = new MyMainHandler(this);
-        startPlay();
     }
 
     private final BleConnectStatusListener mConnectStatusListener = new BleConnectStatusListener() {
@@ -112,23 +115,6 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
             case R.id.llhome:
                 startActivity(new Intent(this, MainActivity.class));
                 break;
-            case R.id.lltop:
-                //前进
-                cmd = "01";
-                playBle(macAdress, cmd, speed);
-                break;
-            case R.id.llbottom:
-                cmd = "02";
-                playBle(macAdress, cmd, speed);
-                break;
-            case R.id.llleft:
-                cmd = "04";
-                playBle(macAdress, cmd, speed);
-                break;
-            case R.id.llright:
-                cmd = "08";
-                playBle(macAdress, cmd, speed);
-                break;
             default:
                 break;
         }
@@ -148,7 +134,6 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
     @Override
     public void onStop(VerticalSeekBar slideView, int progress) {
         speed = progress;
-        playBle(macAdress, cmd, speed);
     }
 
     private final Runnable task = new Runnable() {
@@ -157,6 +142,40 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
             myMainHandler.sendEmptyMessage(1);
         }
     };
+
+    @Override
+    public boolean onTouch(View view, MotionEvent motionEvent) {
+        int action = motionEvent.getAction();
+        int id = view.getId();
+        if (action == MotionEvent.ACTION_DOWN) {
+            switch (id) {
+                case R.id.lltop:
+                    //前进
+                    cmd = "01";
+                    break;
+                case R.id.llbottom:
+                    //后退
+                    cmd = "02";
+                    break;
+                case R.id.llleft:
+                    //向左
+                    cmd = "04";
+                    break;
+                case R.id.llright:
+                    //向右
+                    cmd = "08";
+                    break;
+                default:
+                    break;
+            }
+            myMainHandler.postDelayed(task, 100);
+        } else if (action == MotionEvent.ACTION_UP) {
+            // 松开
+            cmd = "00";
+            myMainHandler.sendEmptyMessage(0);
+        }
+        return false;
+    }
 
     public static class MyMainHandler extends Handler {
         WeakReference<PlayActivity> mActivityReference;
@@ -174,10 +193,16 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
             switch (msg.what) {
                 case 1:
                     mActivityReference.get().playBle(mActivityReference.get()
-                            .macAdress, mActivityReference.get().cmd, mActivityReference.get().speed);
+                            .macAdress, mActivityReference.get().cmd, mActivityReference.get()
+                            .speed);
                     mActivityReference.get().myMainHandler.postDelayed(mActivityReference.get()
                             .task, 100);
                     break;
+                case 0:
+                    //停止了
+                    mActivityReference.get().playBle(mActivityReference.get()
+                            .macAdress, mActivityReference.get().cmd, mActivityReference.get()
+                            .speed);
                 default:
                     break;
             }
@@ -189,14 +214,6 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
         super.onDestroy();
         myMainHandler.removeCallbacks(task);
     }
-
-    /**
-     * 开启线程刷新
-     */
-    private void startPlay() {
-        myMainHandler.postDelayed(task, 100);
-    }
-
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {

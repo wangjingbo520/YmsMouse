@@ -43,4 +43,16 @@
         android:textSize="@dimen/sp_20"
         android:textStyle="bold" />
 
+    <TextView
+        android:id="@+id/tv4"
+        android:layout_width="@dimen/dp_300"
+        android:layout_height="@dimen/dp_40"
+        android:layout_marginTop="@dimen/dp_25"
+        android:background="@drawable/bg_menu"
+        android:gravity="center"
+        android:text="Language Settings"
+        android:textColor="@color/themeColor"
+        android:textSize="@dimen/sp_20"
+        android:textStyle="bold" />
+
 </LinearLayout>

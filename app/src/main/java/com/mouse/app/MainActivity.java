@@ -1,23 +1,31 @@
 package com.mouse.app;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.Toast;
 
 import com.mouse.app.utils.ClientManager;
 import com.mouse.app.utils.Constants;
 import com.mouse.app.utils.MathUtils;
 import com.mouse.app.utils.ToastUtil;
+
+import java.util.Locale;
 
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.OnNeverAskAgain;
@@ -32,26 +40,6 @@ import static com.mouse.app.utils.MathUtils.randomHexString;
 @RuntimePermissions
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    public byte[] hexStringToBytes(String hexString) {
-        if (hexString == null || hexString.equals("")) {
-            return null;
-        }
-        hexString = hexString.toUpperCase();
-        int length = hexString.length() / 2;
-        char[] hexChars = hexString.toCharArray();
-        byte[] d = new byte[length];
-        for (int i = 0; i < length; i++) {
-            int pos = i * 2;
-            d[i] = (byte) (charToByte(hexChars[pos]) << 4 | charToByte(hexChars[pos + 1]));
-
-        }
-        return d;
-    }
-
-    private static byte charToByte(char c) {
-        return (byte) "0123456789ABCDEF".indexOf(c);
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.tv1).setOnClickListener(this);
         findViewById(R.id.tv2).setOnClickListener(this);
         findViewById(R.id.tv3).setOnClickListener(this);
+        findViewById(R.id.tv4).setOnClickListener(this);
     }
 
     @Override
@@ -74,7 +63,78 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.tv3:
                 startActivity(new Intent(this, BleActivity.class));
                 break;
+            case R.id.tv4:
+                dialogChoice();
+                break;
             default:
+                break;
+        }
+    }
+
+    /**
+     * 单选
+     */
+    private void dialogChoice() {
+        final String items[] = {getResources().getString(R.string.app_chinase), getResources()
+                .getString(R.string.app_english)};
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("单选");
+        builder.setIcon(R.mipmap.ic_launcher);
+        builder.setSingleChoiceItems(items, 0,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (0 == which) {
+                            com.mouse.app.Constants.langae = "zh";
+                        } else if (1 == which) {
+                            com.mouse.app.Constants.langae = "en";
+                        }
+                    }
+                });
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                setLangue();
+                dialog.dismiss();
+            }
+        });
+        builder.create().show();
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        switchLanguage(com.mouse.app.Constants.langae);
+    }
+
+    public void setLangue() {
+        Locale locale = new Locale(com.mouse.app.Constants.langae);
+        Locale.setDefault(locale);
+        Configuration config = new Configuration();
+        config.locale = locale;
+        Resources resources = getResources();
+        resources.updateConfiguration(config, resources.getDisplayMetrics());
+        //回到应用的首页
+        startActivity(new Intent(this, MainActivity.class));
+    }
+
+    //核心设置的代码
+    protected void switchLanguage(String language) {
+        Resources resources = getResources();
+        Configuration config = resources.getConfiguration();
+        DisplayMetrics dm = resources.getDisplayMetrics();
+        switch (language) {
+            case "zh":
+                config.locale = Locale.CHINESE;
+                resources.updateConfiguration(config, dm);
+                break;
+            case "en":
+                config.locale = Locale.ENGLISH;
+                resources.updateConfiguration(config, dm);
+                break;
+            default:
+                config.locale = Locale.US;
+                resources.updateConfiguration(config, dm);
                 break;
         }
     }
