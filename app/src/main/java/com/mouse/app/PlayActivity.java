@@ -123,12 +123,12 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
 
     @Override
     public void onProgress(VerticalSeekBar slideView, int progress) {
-
+        this.speed = progress;
     }
 
     @Override
     public void onStop(VerticalSeekBar slideView, int progress) {
-        this.speed = progress;
+
     }
 
     private final Runnable task = new Runnable() {
@@ -167,7 +167,16 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
             }
         } else if (action == MotionEvent.ACTION_UP) {
             // 松开
-            this.cmd = STILL_CODE;
+            switch (id) {
+                case R.id.lltop:
+                case R.id.llbottom:
+                case R.id.llleft:
+                case R.id.llright:
+                    this.cmd = STILL_CODE;
+                default:
+                    this.cmd = STILL_CODE;
+                    break;
+            }
         }
         myMainHandler.sendEmptyMessage(1);
         return false;
