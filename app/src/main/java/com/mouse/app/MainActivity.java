@@ -17,6 +17,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
 
@@ -49,7 +50,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.tv2).setOnClickListener(this);
         findViewById(R.id.tv3).setOnClickListener(this);
         findViewById(R.id.tv4).setOnClickListener(this);
+        findViewById(R.id.tv1).setOnClickListener(this);
     }
+
 
     @Override
     public void onClick(View view) {

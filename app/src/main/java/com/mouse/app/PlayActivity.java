@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -20,12 +19,9 @@ import com.inuker.bluetooth.library.model.BleGattProfile;
 import com.inuker.bluetooth.library.utils.BluetoothLog;
 import com.mouse.app.utils.BluetoothUtils;
 import com.mouse.app.utils.ClientManager;
-import com.mouse.app.utils.Constants;
-import com.mouse.app.utils.MathUtils;
 import com.mouse.app.view.VerticalSeekBar;
 
 import java.lang.ref.WeakReference;
-import java.util.UUID;
 
 import static com.inuker.bluetooth.library.Constants.REQUEST_SUCCESS;
 import static com.inuker.bluetooth.library.Constants.STATUS_CONNECTED;
@@ -38,7 +34,11 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
     private boolean mConnected;
     private VerticalSeekBar verticalSeekBar;
     private int speed = 10;
-    private String cmd = "00";
+    /**
+     * 静止的命令
+     */
+    public static String STILL_CODE = "00";
+    private String cmd = STILL_CODE;
     private MyMainHandler myMainHandler;
 
     public static void start(Context context, String macAdress) {
@@ -142,33 +142,34 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
     public boolean onTouch(View view, MotionEvent motionEvent) {
         int action = motionEvent.getAction();
         int id = view.getId();
+        myMainHandler.removeCallbacks(task);
         if (action == MotionEvent.ACTION_DOWN) {
+            //按下去
             switch (id) {
                 case R.id.lltop:
                     //前进
-                    cmd = "01";
+                    this.cmd = "01";
                     break;
                 case R.id.llbottom:
                     //后退
-                    cmd = "02";
+                    this.cmd = "02";
                     break;
                 case R.id.llleft:
                     //向左
-                    cmd = "04";
+                    this.cmd = "04";
                     break;
                 case R.id.llright:
                     //向右
-                    cmd = "08";
+                    this.cmd = "08";
                     break;
                 default:
                     break;
             }
-            myMainHandler.postDelayed(task, 100);
         } else if (action == MotionEvent.ACTION_UP) {
             // 松开
-            this.cmd = "00";
-            myMainHandler.sendEmptyMessage(0);
+            this.cmd = STILL_CODE;
         }
+        myMainHandler.sendEmptyMessage(1);
         return false;
     }
 
@@ -193,21 +194,10 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
                     mActivityReference.get().myMainHandler.postDelayed(mActivityReference.get()
                             .task, 100);
                     break;
-                case 0:
-                    //停止了
-                    mActivityReference.get().playBle(mActivityReference.get()
-                            .macAdress, mActivityReference.get().cmd, mActivityReference.get()
-                            .speed);
                 default:
                     break;
             }
         }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        myMainHandler.removeCallbacks(task);
     }
 
     @Override
@@ -231,4 +221,9 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
         return super.onKeyDown(keyCode, event);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        myMainHandler.removeCallbacks(task);
+    }
 }
