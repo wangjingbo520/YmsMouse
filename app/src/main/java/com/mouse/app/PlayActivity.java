@@ -177,9 +177,20 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
                     this.cmd = STILL_CODE;
                     break;
             }
+        } else if (action == MotionEvent.ACTION_CANCEL) {
+            switch (id) {
+                case R.id.lltop:
+                case R.id.llbottom:
+                case R.id.llleft:
+                case R.id.llright:
+                    this.cmd = STILL_CODE;
+                default:
+                    this.cmd = STILL_CODE;
+                    break;
+            }
         }
         myMainHandler.sendEmptyMessage(1);
-        return false;
+        return true;
     }
 
     public static class MyMainHandler extends Handler {
