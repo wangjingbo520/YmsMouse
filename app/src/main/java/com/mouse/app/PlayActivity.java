@@ -106,7 +106,7 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.llguide:
-                startActivity(new Intent(this, MenuActivity.class));
+                startActivity(new Intent(this, GuideActivity.class));
                 break;
             case R.id.llhome:
                 startActivity(new Intent(this, MainActivity.class));
@@ -228,6 +228,7 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
                     .setPositiveButton("sure", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
+                            ClientManager.getClient().disconnect(macAdress);
                             finish();
                         }
                     }).setNegativeButton("cancel", new DialogInterface.OnClickListener() {
