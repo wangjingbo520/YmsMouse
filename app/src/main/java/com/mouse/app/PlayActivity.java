@@ -19,6 +19,7 @@ import com.inuker.bluetooth.library.model.BleGattProfile;
 import com.inuker.bluetooth.library.utils.BluetoothLog;
 import com.mouse.app.utils.BluetoothUtils;
 import com.mouse.app.utils.ClientManager;
+import com.mouse.app.view.BatteryView;
 import com.mouse.app.view.VerticalSeekBar;
 
 import java.lang.ref.WeakReference;
@@ -29,6 +30,7 @@ import static com.inuker.bluetooth.library.Constants.STATUS_CONNECTED;
 
 public class PlayActivity extends BaseActivity implements View.OnClickListener, VerticalSeekBar
         .SlideChangeListener, View.OnTouchListener {
+    private BatteryView horizontalBattery;
     private String macAdress;
     private BluetoothDevice mDevice;
     private boolean mConnected;
@@ -52,6 +54,7 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play);
         verticalSeekBar = findViewById(R.id.verticalSeekBar);
+        horizontalBattery = findViewById(R.id.horizontalBattery);
         findViewById(R.id.llguide).setOnClickListener(this);
         findViewById(R.id.llhome).setOnClickListener(this);
         findViewById(R.id.lltop).setOnTouchListener(this);
@@ -67,6 +70,7 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
         verticalSeekBar.setProgress(speed);
         verticalSeekBar.setOnSlideChangeListener(this);
         myMainHandler = new MyMainHandler(this);
+        notifi(macAdress);
     }
 
     private final BleConnectStatusListener mConnectStatusListener = new BleConnectStatusListener() {
@@ -177,6 +181,8 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
                     this.cmd = STILL_CODE;
                     break;
             }
+            speed = 0;
+            verticalSeekBar.setProgress(0);
         } else if (action == MotionEvent.ACTION_CANCEL) {
             switch (id) {
                 case R.id.lltop:
@@ -189,6 +195,8 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
                     break;
             }
         }
+        speed = 0;
+        verticalSeekBar.setProgress(0);
         myMainHandler.sendEmptyMessage(1);
         return true;
     }
@@ -246,5 +254,12 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
     protected void onDestroy() {
         super.onDestroy();
         myMainHandler.removeCallbacks(task);
+    }
+
+    @Override
+    public void onNotifiSucess(byte[] value) {
+        super.onNotifiSucess(value);
+        //电量显示
+
     }
 }

@@ -3,6 +3,7 @@ package com.mouse.app;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.inuker.bluetooth.library.connect.response.BleNotifyResponse;
 import com.inuker.bluetooth.library.connect.response.BleWriteResponse;
 import com.mouse.app.utils.ClientManager;
 import com.mouse.app.utils.Constants;
@@ -20,6 +21,26 @@ import static com.mouse.app.utils.MathUtils.hexStringToBytes;
  */
 public class BaseActivity extends AppCompatActivity {
     private String XX = "00";
+
+    public void notifi(String macAdress) {
+        ClientManager.getClient().notify(macAdress, UUID.fromString(Constants.serviceUuid), UUID
+                .fromString(Constants.notifiUuid), new
+                BleNotifyResponse() {
+                    @Override
+                    public void onNotify(UUID service, UUID character, byte[] value) {
+                        onNotifiSucess(value);
+                    }
+
+                    @Override
+                    public void onResponse(int code) {
+                        if (code == REQUEST_SUCCESS) {
+
+                        }
+                    }
+                });
+
+    }
+
 
     public final BleWriteResponse mWriteRsp = new BleWriteResponse() {
         @Override
@@ -46,6 +67,11 @@ public class BaseActivity extends AppCompatActivity {
      * 写成功的回调
      */
     public void onWriteSucess() {
+
+    }
+
+    public void onNotifiSucess(byte[] value) {
+        byte a = value[1];
 
     }
 
