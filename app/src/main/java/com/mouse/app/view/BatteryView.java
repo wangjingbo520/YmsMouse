@@ -17,7 +17,7 @@ import com.mouse.app.R;
  * describe
  */
 public class BatteryView extends View {
-    private int mPower = 100;
+    private int mPower = 9;
     private int orientation;
     private int width;
     private int height;

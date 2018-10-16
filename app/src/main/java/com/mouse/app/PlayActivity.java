@@ -260,6 +260,7 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
     public void onNotifiSucess(byte[] value) {
         super.onNotifiSucess(value);
         //电量显示
-
+        Integer x = Integer.parseInt(String.valueOf(value[1]), 16);
+        horizontalBattery.setPower(x);
     }
 }

@@ -70,13 +70,13 @@
 
         <com.mouse.app.view.BatteryView
             android:id="@+id/horizontalBattery"
-            android:layout_width="@dimen/dp_40"
+            android:layout_width="@dimen/dp_30"
             android:layout_height="@dimen/dp_15"
             android:background="#fff"
             android:gravity="center"
             app:batteryColor="@android:color/black"
             app:batteryOrientation="horizontal"
-            app:batteryPower="70" />
+            app:batteryPower="1" />
 
         <TextView
             android:id="@+id/tvTop"
@@ -85,9 +85,9 @@
             android:layout_centerHorizontal="true"
             android:background="@drawable/bg_dialog_confirm"
             android:gravity="center"
-            android:paddingLeft="@dimen/dp_30"
+            android:paddingLeft="@dimen/dp_20"
             android:paddingTop="@dimen/dp_5"
-            android:paddingRight="@dimen/dp_30"
+            android:paddingRight="@dimen/dp_20"
             android:paddingBottom="@dimen/dp_5"
             android:text="Play:Remote Control "
             android:textColor="@color/white" />
