@@ -75,7 +75,8 @@ public class BatteryView extends View {
         float strokeWidth = width / 20.f;
         float strokeWidth_2 = strokeWidth / 2;
         paint.setStrokeWidth(strokeWidth);
-        RectF r1 = new RectF(strokeWidth_2, strokeWidth_2, width - strokeWidth - strokeWidth_2, height - strokeWidth_2);
+        RectF r1 = new RectF(strokeWidth_2, strokeWidth_2, width - strokeWidth - strokeWidth_2,
+                height - strokeWidth_2);
         //设置外边框颜色为黑色
         paint.setColor(Color.BLACK);
         canvas.drawRect(r1, paint);
@@ -115,11 +116,13 @@ public class BatteryView extends View {
         float strokeWidth2 = strokeWidth / 2;
         paint.setStrokeWidth(strokeWidth);
         int headHeight = (int) (strokeWidth + 0.5f);
-        RectF rect = new RectF(strokeWidth2, headHeight + strokeWidth2, width - strokeWidth2, height - strokeWidth2);
+        RectF rect = new RectF(strokeWidth2, headHeight + strokeWidth2, width - strokeWidth2,
+                height - strokeWidth2);
         canvas.drawRect(rect, paint);
         paint.setStrokeWidth(0);
         float topOffset = (height - headHeight - strokeWidth) * (100 - mPower) / 100.0f;
-        RectF rect2 = new RectF(strokeWidth, headHeight + strokeWidth + topOffset, width - strokeWidth, height - strokeWidth);
+        RectF rect2 = new RectF(strokeWidth, headHeight + strokeWidth + topOffset, width -
+                strokeWidth, height - strokeWidth);
         paint.setStyle(Paint.Style.FILL);
         canvas.drawRect(rect2, paint);
         RectF headRect = new RectF(width / 4.0f, 0, width * 0.75f, headHeight);
@@ -134,7 +137,8 @@ public class BatteryView extends View {
     public void setPower(int power) {
         this.mPower = power;
         if (mPower < 0) {
-            mPower = 100;
+            //   mPower = 100;
+            mPower = 1;
         }
         invalidate();//刷新VIEW
     }
