@@ -85,9 +85,9 @@
             android:id="@+id/horizontalBattery"
             android:layout_width="@dimen/dp_30"
             android:layout_height="@dimen/dp_15"
-            android:background="#fff"
+            android:background="@color/themeColor"
             android:gravity="center"
-            app:batteryColor="@android:color/black"
+            app:batteryColor="#4fa245"
             app:batteryOrientation="horizontal"
             app:batteryPower="1" />
 

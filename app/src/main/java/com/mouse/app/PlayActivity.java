@@ -36,7 +36,7 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
     private BluetoothDevice mDevice;
     private boolean mConnected;
     private VerticalSeekBar verticalSeekBar;
-    private int speed = 10;
+    private int speed = 0;
     /**
      * 静止的命令
      */
@@ -48,6 +48,7 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
     private LinearLayout llBottom;
     private LinearLayout llLeft;
     private LinearLayout llRight;
+    private boolean isCaozuo = false;
 
 
     public static void start(Context context, String macAdress) {

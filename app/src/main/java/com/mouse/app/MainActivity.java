@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(new Intent(this, BleActivity.class));
                 break;
             case R.id.tv4:
-                dialogChoice();
+             //   dialogChoice();
                 break;
             default:
                 break;
