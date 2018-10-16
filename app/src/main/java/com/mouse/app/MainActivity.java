@@ -21,6 +21,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
 
+import com.mouse.app.demo.DemoActivity;
 import com.mouse.app.utils.ClientManager;
 import com.mouse.app.utils.Constants;
 import com.mouse.app.utils.MathUtils;
@@ -59,6 +60,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (view.getId()) {
             case R.id.tv1:
                 startActivity(new Intent(this, MenuActivity.class));
+              //  startActivity(new Intent(this, DemoActivity.class));
+              //  startActivity(new Intent(this, PlayActivity.class));
                 break;
             case R.id.tv2:
                 startActivity(new Intent(this, GuideActivity.class));

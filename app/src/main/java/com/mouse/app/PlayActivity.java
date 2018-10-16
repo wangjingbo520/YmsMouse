@@ -11,16 +11,17 @@ import android.support.v7.app.AlertDialog;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import com.inuker.bluetooth.library.connect.listener.BleConnectStatusListener;
 import com.inuker.bluetooth.library.connect.options.BleConnectOptions;
 import com.inuker.bluetooth.library.connect.response.BleConnectResponse;
 import com.inuker.bluetooth.library.model.BleGattProfile;
 import com.inuker.bluetooth.library.utils.BluetoothLog;
-import com.mouse.app.utils.BluetoothUtils;
+import com.inuker.bluetooth.library.utils.BluetoothUtils;
+import com.mouse.app.demo.VerticalSeekBar;
 import com.mouse.app.utils.ClientManager;
 import com.mouse.app.view.BatteryView;
-import com.mouse.app.view.VerticalSeekBar;
 
 import java.lang.ref.WeakReference;
 
@@ -43,6 +44,12 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
     private String cmd = STILL_CODE;
     private MyMainHandler myMainHandler;
 
+    private LinearLayout llTop;
+    private LinearLayout llBottom;
+    private LinearLayout llLeft;
+    private LinearLayout llRight;
+
+
     public static void start(Context context, String macAdress) {
         Intent starter = new Intent(context, PlayActivity.class);
         starter.putExtra("macAdress", macAdress);
@@ -61,6 +68,10 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
         findViewById(R.id.llbottom).setOnTouchListener(this);
         findViewById(R.id.llleft).setOnTouchListener(this);
         findViewById(R.id.llright).setOnTouchListener(this);
+        llTop = findViewById(R.id.lltop);
+        llBottom = findViewById(R.id.llbottom);
+        llLeft = findViewById(R.id.llleft);
+        llRight = findViewById(R.id.llright);
         macAdress = getIntent().getStringExtra("macAdress");
         mDevice = BluetoothUtils.getRemoteDevice(macAdress);
         ClientManager.getClient().registerConnectStatusListener(macAdress,
@@ -152,18 +163,22 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
             switch (id) {
                 case R.id.lltop:
                     //前进
+                    llTop.setBackgroundColor(getResources().getColor(R.color.white));
                     this.cmd = "01";
                     break;
                 case R.id.llbottom:
                     //后退
+                    llBottom.setBackgroundColor(getResources().getColor(R.color.white));
                     this.cmd = "02";
                     break;
                 case R.id.llleft:
                     //向左
+                    llLeft.setBackgroundColor(getResources().getColor(R.color.white));
                     this.cmd = "04";
                     break;
                 case R.id.llright:
                     //向右
+                    llRight.setBackgroundColor(getResources().getColor(R.color.white));
                     this.cmd = "08";
                     break;
                 default:
@@ -181,8 +196,12 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
                     this.cmd = STILL_CODE;
                     break;
             }
+            llTop.setBackgroundColor(getResources().getColor(R.color.trans));
+            llBottom.setBackgroundColor(getResources().getColor(R.color.trans));
+            llLeft.setBackgroundColor(getResources().getColor(R.color.trans));
+            llRight.setBackgroundColor(getResources().getColor(R.color.trans));
             speed = 0;
-            verticalSeekBar.setProgress(0);
+            verticalSeekBar.setProgress(speed);
         } else if (action == MotionEvent.ACTION_CANCEL) {
             switch (id) {
                 case R.id.lltop:
@@ -194,9 +213,13 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
                     this.cmd = STILL_CODE;
                     break;
             }
+            llTop.setBackgroundColor(getResources().getColor(R.color.trans));
+            llBottom.setBackgroundColor(getResources().getColor(R.color.trans));
+            llLeft.setBackgroundColor(getResources().getColor(R.color.trans));
+            llRight.setBackgroundColor(getResources().getColor(R.color.trans));
+            speed = 0;
+            verticalSeekBar.setProgress(speed);
         }
-        speed = 0;
-        verticalSeekBar.setProgress(0);
         myMainHandler.sendEmptyMessage(1);
         return true;
     }
@@ -253,7 +276,9 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        myMainHandler.removeCallbacks(task);
+        if (task != null && myMainHandler != null) {
+            myMainHandler.removeCallbacks(task);
+        }
     }
 
     @Override

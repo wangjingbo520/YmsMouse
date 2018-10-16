@@ -26,17 +26,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
-            <!--<intent-filter android:label="@string/filter_title_viewgizmos">-->
-            <!--<action android:name="android.intent.action.VIEW" />-->
+            <!-- <intent-filter android:label="@string/filter_title_viewgizmos"> -->
+            <!-- <action android:name="android.intent.action.VIEW" /> -->
 
-            <!--<category android:name="android.intent.category.DEFAULT" />-->
-            <!--<category android:name="android.intent.category.BROWSABLE" />-->
-            <!--&lt;!&ndash; Accepts URIs that begin with "http://www.example.com/gizmos” &ndash;&gt;-->
-            <!--<data-->
-            <!--android:host="www.example.com"-->
-            <!--android:pathPrefix="/gizmos"-->
-            <!--android:scheme="http" />-->
-            <!--</intent-filter>-->
+
+            <!-- <category android:name="android.intent.category.DEFAULT" /> -->
+            <!-- <category android:name="android.intent.category.BROWSABLE" /> -->
+            <!-- &lt;!&ndash; Accepts URIs that begin with "http://www.example.com/gizmos” &ndash;&gt; -->
+            <!-- <data -->
+            <!-- android:host="www.example.com" -->
+            <!-- android:pathPrefix="/gizmos" -->
+            <!-- android:scheme="http" /> -->
+            <!-- </intent-filter> -->
         </activity>
         <activity android:name=".GuideActivity" />
         <activity android:name=".MenuActivity" />
@@ -49,7 +50,8 @@
         <activity
             android:name=".PlayActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="landscape"></activity>
+            android:screenOrientation="landscape" />
+        <activity android:name=".demo.DemoActivity"></activity>
     </application>
 
 </manifest>

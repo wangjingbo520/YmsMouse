@@ -28,20 +28,33 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <com.mouse.app.view.VerticalSeekBar
-                android:id="@+id/verticalSeekBar"
-                android:layout_width="@dimen/dp_50"
-                android:layout_height="match_parent"
-                android:layout_centerInParent="true"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="@dimen/dp_20" />
+            <FrameLayout
+                android:id="@+id/fl"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/dp_300"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/dp_20"
+                android:layout_marginBottom="@dimen/dp_20">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/dp_300"
+                    android:layout_gravity="center"
+                    android:background="@mipmap/bar" />
+
+                <com.mouse.app.demo.VerticalSeekBar
+                    android:id="@+id/verticalSeekBar"
+                    android:layout_width="@dimen/dp_50"
+                    android:layout_height="@dimen/dp_275"
+                    android:layout_gravity="center" />
+            </FrameLayout>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_marginTop="@dimen/dp_20"
-                android:layout_toRightOf="@id/verticalSeekBar"
+                android:layout_toRightOf="@id/fl"
                 android:text="19"
                 android:textColor="@color/white"
                 android:textSize="@dimen/dp_18"
@@ -52,7 +65,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_marginBottom="@dimen/dp_20"
-                android:layout_toRightOf="@id/verticalSeekBar"
+                android:layout_toRightOf="@id/fl"
                 android:text="0"
                 android:textColor="@color/white"
                 android:textSize="@dimen/dp_18"
@@ -117,7 +130,7 @@
                     android:id="@+id/ivUp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@mipmap/up" />
+                    android:background="@mipmap/up" />
             </LinearLayout>
 
             <LinearLayout
