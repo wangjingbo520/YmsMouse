@@ -93,9 +93,12 @@
 
         <TextView
             android:id="@+id/tvTop"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_40"
             android:layout_centerHorizontal="true"
+            android:layout_marginLeft="@dimen/dp_30"
+            android:layout_marginRight="@dimen/dp_30"
+            android:layout_toRightOf="@id/horizontalBattery"
             android:background="@drawable/bg_dialog_confirm"
             android:gravity="center"
             android:paddingLeft="@dimen/dp_20"
@@ -115,14 +118,15 @@
             android:textSize="@dimen/sp_15" />
 
         <RelativeLayout
-            android:layout_width="@dimen/dp_150"
-            android:layout_height="@dimen/dp_150"
+            android:layout_width="@dimen/dp_220"
+            android:layout_height="@dimen/dp_220"
             android:layout_centerInParent="true">
 
             <LinearLayout
                 android:id="@+id/lltop"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
                 android:gravity="center">
 
@@ -130,12 +134,12 @@
                     android:id="@+id/ivUp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@mipmap/up" />
+                    android:background="@mipmap/s1" />
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/llbottom"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
@@ -145,13 +149,13 @@
                     android:id="@+id/ivdown"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@mipmap/down" />
+                    android:background="@mipmap/x1" />
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/llright"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:gravity="center">
@@ -160,13 +164,13 @@
                     android:id="@+id/ivright"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@mipmap/right" />
+                    android:background="@mipmap/r1" />
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/llleft"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
                 android:gravity="center">
@@ -175,8 +179,7 @@
                     android:id="@+id/ivleft"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-
-                    android:src="@mipmap/left" />
+                    android:background="@mipmap/l1" />
             </LinearLayout>
 
         </RelativeLayout>
@@ -185,10 +188,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="@dimen/dp_30"
+            android:layout_marginBottom="@dimen/dp_20"
             android:gravity="center_horizontal"
             android:orientation="horizontal">
-
 
             <LinearLayout
                 android:id="@+id/llguide"

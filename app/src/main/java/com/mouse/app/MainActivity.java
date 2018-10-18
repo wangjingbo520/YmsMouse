@@ -60,8 +60,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (view.getId()) {
             case R.id.tv1:
                 startActivity(new Intent(this, MenuActivity.class));
-              //  startActivity(new Intent(this, DemoActivity.class));
-              //  startActivity(new Intent(this, PlayActivity.class));
+                //  startActivity(new Intent(this, DemoActivity.class));
+                //     startActivity(new Intent(this, PlayActivity.class));
                 break;
             case R.id.tv2:
                 startActivity(new Intent(this, GuideActivity.class));
@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(new Intent(this, BleActivity.class));
                 break;
             case R.id.tv4:
-             //   dialogChoice();
+                //   dialogChoice();
                 break;
             default:
                 break;

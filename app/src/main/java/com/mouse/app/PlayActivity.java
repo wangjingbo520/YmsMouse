@@ -11,6 +11,7 @@ import android.support.v7.app.AlertDialog;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.inuker.bluetooth.library.connect.listener.BleConnectStatusListener;
@@ -36,7 +37,7 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
     private BluetoothDevice mDevice;
     private boolean mConnected;
     private VerticalSeekBar verticalSeekBar;
-    private int speed = 0;
+    private int speed = 5;
     /**
      * 静止的命令
      */
@@ -44,10 +45,11 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
     private String cmd = STILL_CODE;
     private MyMainHandler myMainHandler;
 
-    private LinearLayout llTop;
-    private LinearLayout llBottom;
-    private LinearLayout llLeft;
-    private LinearLayout llRight;
+    private ImageView ivUp;
+    private ImageView ivdown;
+    private ImageView ivright;
+    private ImageView ivleft;
+
     private boolean isCaozuo = false;
 
 
@@ -69,10 +71,11 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
         findViewById(R.id.llbottom).setOnTouchListener(this);
         findViewById(R.id.llleft).setOnTouchListener(this);
         findViewById(R.id.llright).setOnTouchListener(this);
-        llTop = findViewById(R.id.lltop);
-        llBottom = findViewById(R.id.llbottom);
-        llLeft = findViewById(R.id.llleft);
-        llRight = findViewById(R.id.llright);
+
+        ivUp = findViewById(R.id.ivUp);
+        ivdown = findViewById(R.id.ivdown);
+        ivright = findViewById(R.id.ivright);
+        ivleft = findViewById(R.id.ivleft);
         macAdress = getIntent().getStringExtra("macAdress");
         mDevice = BluetoothUtils.getRemoteDevice(macAdress);
         ClientManager.getClient().registerConnectStatusListener(macAdress,
@@ -139,12 +142,17 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
 
     @Override
     public void onProgress(VerticalSeekBar slideView, int progress) {
-        this.speed = progress;
+        if (progress > 0) {
+            this.speed = progress;
+        }
     }
 
     @Override
     public void onStop(VerticalSeekBar slideView, int progress) {
-
+        if (!isCaozuo) {
+            verticalSeekBar.setProgress(0);
+            this.speed = 5;
+        }
     }
 
     private final Runnable task = new Runnable() {
@@ -161,25 +169,26 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
         myMainHandler.removeCallbacks(task);
         if (action == MotionEvent.ACTION_DOWN) {
             //按下去
+            isCaozuo = true;
             switch (id) {
                 case R.id.lltop:
                     //前进
-                    llTop.setBackgroundColor(getResources().getColor(R.color.white));
+                    ivUp.setBackgroundResource(R.mipmap.s2);
                     this.cmd = "01";
                     break;
                 case R.id.llbottom:
                     //后退
-                    llBottom.setBackgroundColor(getResources().getColor(R.color.white));
+                    ivdown.setBackgroundResource(R.mipmap.x2);
                     this.cmd = "02";
                     break;
                 case R.id.llleft:
                     //向左
-                    llLeft.setBackgroundColor(getResources().getColor(R.color.white));
+                    ivleft.setBackgroundResource(R.mipmap.z2);
                     this.cmd = "04";
                     break;
                 case R.id.llright:
                     //向右
-                    llRight.setBackgroundColor(getResources().getColor(R.color.white));
+                    ivright.setBackgroundResource(R.mipmap.y2);
                     this.cmd = "08";
                     break;
                 default:
@@ -187,37 +196,46 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
             }
         } else if (action == MotionEvent.ACTION_UP) {
             // 松开
+            isCaozuo = false;
             switch (id) {
                 case R.id.lltop:
+                    ivUp.setBackgroundResource(R.mipmap.s1);
+                    break;
                 case R.id.llbottom:
+                    ivdown.setBackgroundResource(R.mipmap.x1);
+                    break;
                 case R.id.llleft:
+                    ivleft.setBackgroundResource(R.mipmap.l1);
+                    break;
                 case R.id.llright:
-                    this.cmd = STILL_CODE;
+                    ivright.setBackgroundResource(R.mipmap.r1);
+                    this.cmd = "08";
                 default:
                     this.cmd = STILL_CODE;
                     break;
             }
-            llTop.setBackgroundColor(getResources().getColor(R.color.trans));
-            llBottom.setBackgroundColor(getResources().getColor(R.color.trans));
-            llLeft.setBackgroundColor(getResources().getColor(R.color.trans));
-            llRight.setBackgroundColor(getResources().getColor(R.color.trans));
+            this.cmd = STILL_CODE;
             speed = 0;
             verticalSeekBar.setProgress(speed);
         } else if (action == MotionEvent.ACTION_CANCEL) {
+            isCaozuo = false;
             switch (id) {
                 case R.id.lltop:
+                    ivUp.setBackgroundResource(R.mipmap.s1);
+                    break;
                 case R.id.llbottom:
+                    ivdown.setBackgroundResource(R.mipmap.x1);
+                    break;
                 case R.id.llleft:
+                    ivleft.setBackgroundResource(R.mipmap.l1);
+                    break;
                 case R.id.llright:
-                    this.cmd = STILL_CODE;
+                    ivright.setBackgroundResource(R.mipmap.r1);
                 default:
                     this.cmd = STILL_CODE;
                     break;
             }
-            llTop.setBackgroundColor(getResources().getColor(R.color.trans));
-            llBottom.setBackgroundColor(getResources().getColor(R.color.trans));
-            llLeft.setBackgroundColor(getResources().getColor(R.color.trans));
-            llRight.setBackgroundColor(getResources().getColor(R.color.trans));
+            this.cmd = STILL_CODE;
             speed = 0;
             verticalSeekBar.setProgress(speed);
         }
@@ -279,6 +297,7 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
         super.onDestroy();
         if (task != null && myMainHandler != null) {
             myMainHandler.removeCallbacks(task);
+            myMainHandler.removeCallbacksAndMessages(null);
         }
     }
 
