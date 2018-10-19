@@ -89,7 +89,7 @@
             android:gravity="center"
             app:batteryColor="#4fa245"
             app:batteryOrientation="horizontal"
-            app:batteryPower="1" />
+            app:batteryPower="0" />
 
         <TextView
             android:id="@+id/tvTop"

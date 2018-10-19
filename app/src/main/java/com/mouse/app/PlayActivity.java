@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -37,7 +38,7 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
     private BluetoothDevice mDevice;
     private boolean mConnected;
     private VerticalSeekBar verticalSeekBar;
-    private int speed = 5;
+    private int speed = 10;
     /**
      * 静止的命令
      */
@@ -82,7 +83,7 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
                 mConnectStatusListener);
         verticalSeekBar = findViewById(R.id.verticalSeekBar);
         verticalSeekBar.setMaxProgress(19);
-        verticalSeekBar.setProgress(speed);
+        verticalSeekBar.setProgress(0);
         verticalSeekBar.setOnSlideChangeListener(this);
         myMainHandler = new MyMainHandler(this);
         notifi(macAdress);
@@ -137,7 +138,9 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
 
     @Override
     public void onStart(VerticalSeekBar slideView, int progress) {
+        if (isCaozuo) {
 
+        }
     }
 
     @Override
@@ -149,10 +152,8 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
 
     @Override
     public void onStop(VerticalSeekBar slideView, int progress) {
-        if (!isCaozuo) {
-            verticalSeekBar.setProgress(0);
-            this.speed = 5;
-        }
+        verticalSeekBar.setProgress(0);
+        this.speed = 10;
     }
 
     private final Runnable task = new Runnable() {
@@ -175,21 +176,37 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
                     //前进
                     ivUp.setBackgroundResource(R.mipmap.s2);
                     this.cmd = "01";
+//                    ivdown.setOnTouchListener(null);
+//                    ivleft.setOnTouchListener(null);
+//                    ivright.setOnTouchListener(null);
+
                     break;
                 case R.id.llbottom:
                     //后退
                     ivdown.setBackgroundResource(R.mipmap.x2);
                     this.cmd = "02";
+
+//                    ivUp.setOnTouchListener(null);
+//                    ivleft.setOnTouchListener(null);
+//                    ivright.setOnTouchListener(null);
                     break;
                 case R.id.llleft:
                     //向左
                     ivleft.setBackgroundResource(R.mipmap.z2);
                     this.cmd = "04";
+
+//                    ivdown.setOnTouchListener(null);
+//                    ivleft.setOnTouchListener(null);
+//                    ivright.setOnTouchListener(null);
                     break;
                 case R.id.llright:
                     //向右
                     ivright.setBackgroundResource(R.mipmap.y2);
                     this.cmd = "08";
+
+//                    ivdown.setOnTouchListener(null);
+//                    ivleft.setOnTouchListener(null);
+//                    ivUp.setOnTouchListener(null);
                     break;
                 default:
                     break;
@@ -197,6 +214,10 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
         } else if (action == MotionEvent.ACTION_UP) {
             // 松开
             isCaozuo = false;
+//            ivright.setOnTouchListener(this);
+//            ivdown.setOnTouchListener(this);
+//            ivleft.setOnTouchListener(this);
+//            ivUp.setOnTouchListener(this);
             switch (id) {
                 case R.id.lltop:
                     ivUp.setBackgroundResource(R.mipmap.s1);
@@ -215,10 +236,14 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
                     break;
             }
             this.cmd = STILL_CODE;
-            speed = 0;
-            verticalSeekBar.setProgress(speed);
+            speed = 10;
+            verticalSeekBar.setProgress(0);
         } else if (action == MotionEvent.ACTION_CANCEL) {
             isCaozuo = false;
+            ivright.setOnTouchListener(this);
+            ivdown.setOnTouchListener(this);
+            ivleft.setOnTouchListener(this);
+            ivUp.setOnTouchListener(this);
             switch (id) {
                 case R.id.lltop:
                     ivUp.setBackgroundResource(R.mipmap.s1);
@@ -236,8 +261,8 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
                     break;
             }
             this.cmd = STILL_CODE;
-            speed = 0;
-            verticalSeekBar.setProgress(speed);
+            speed = 10;
+            verticalSeekBar.setProgress(0);
         }
         myMainHandler.sendEmptyMessage(1);
         return true;
@@ -306,6 +331,7 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
         super.onNotifiSucess(value);
         //电量显示
         Integer x = Integer.parseInt(String.valueOf(value[1]), 16);
+        // Log.e("-->", "onNotifiSucess: "+x );
         horizontalBattery.setPower(x);
     }
 }
