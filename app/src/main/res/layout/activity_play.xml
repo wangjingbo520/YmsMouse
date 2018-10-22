@@ -122,7 +122,7 @@
             android:layout_height="@dimen/dp_220"
             android:layout_centerInParent="true">
 
-            <LinearLayout
+            <com.mouse.app.view.MyLinearLayout
                 android:id="@+id/lltop"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -135,7 +135,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@mipmap/s1" />
-            </LinearLayout>
+            </com.mouse.app.view.MyLinearLayout>
 
             <LinearLayout
                 android:id="@+id/llbottom"

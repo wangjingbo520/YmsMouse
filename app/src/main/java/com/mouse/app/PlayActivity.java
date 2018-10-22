@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -63,10 +64,10 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
         horizontalBattery = findViewById(R.id.horizontalBattery);
         findViewById(R.id.llguide).setOnClickListener(this);
         findViewById(R.id.llhome).setOnClickListener(this);
-        findViewById(R.id.lltop).setOnTouchListener(this);
-        findViewById(R.id.llbottom).setOnTouchListener(this);
-        findViewById(R.id.llleft).setOnTouchListener(this);
-        findViewById(R.id.llright).setOnTouchListener(this);
+     //   findViewById(R.id.lltop).setOnTouchListener(this);
+//        findViewById(R.id.llbottom).setOnTouchListener(this);
+//        findViewById(R.id.llleft).setOnTouchListener(this);
+//        findViewById(R.id.llright).setOnTouchListener(this);
 
         ivUp = findViewById(R.id.ivUp);
         ivdown = findViewById(R.id.ivdown);
@@ -159,6 +160,7 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
     public boolean onTouch(View view, MotionEvent motionEvent) {
         int action = motionEvent.getAction();
         int id = view.getId();
+        Log.e("action", "onTouch: "+action);
         myMainHandler.removeCallbacks(task);
         if (action == MotionEvent.ACTION_DOWN) {
             //按下去
@@ -229,6 +231,13 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
         }
         myMainHandler.sendEmptyMessage(1);
         return true;
+    }
+
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        return super.onTouchEvent(event);
+
     }
 
     public static class MyMainHandler extends Handler {
