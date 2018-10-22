@@ -8,12 +8,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import com.inuker.bluetooth.library.connect.listener.BleConnectStatusListener;
 import com.inuker.bluetooth.library.connect.options.BleConnectOptions;
@@ -50,9 +48,6 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
     private ImageView ivdown;
     private ImageView ivright;
     private ImageView ivleft;
-
-    private boolean isCaozuo = false;
-
 
     public static void start(Context context, String macAdress) {
         Intent starter = new Intent(context, PlayActivity.class);
@@ -138,9 +133,6 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
 
     @Override
     public void onStart(VerticalSeekBar slideView, int progress) {
-        if (isCaozuo) {
-
-        }
     }
 
     @Override
@@ -170,54 +162,32 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
         myMainHandler.removeCallbacks(task);
         if (action == MotionEvent.ACTION_DOWN) {
             //按下去
-            isCaozuo = true;
             switch (id) {
                 case R.id.lltop:
                     //前进
                     ivUp.setBackgroundResource(R.mipmap.s2);
                     this.cmd = "01";
-//                    ivdown.setOnTouchListener(null);
-//                    ivleft.setOnTouchListener(null);
-//                    ivright.setOnTouchListener(null);
-
                     break;
                 case R.id.llbottom:
                     //后退
                     ivdown.setBackgroundResource(R.mipmap.x2);
                     this.cmd = "02";
-
-//                    ivUp.setOnTouchListener(null);
-//                    ivleft.setOnTouchListener(null);
-//                    ivright.setOnTouchListener(null);
                     break;
                 case R.id.llleft:
                     //向左
                     ivleft.setBackgroundResource(R.mipmap.z2);
                     this.cmd = "04";
-
-//                    ivdown.setOnTouchListener(null);
-//                    ivleft.setOnTouchListener(null);
-//                    ivright.setOnTouchListener(null);
                     break;
                 case R.id.llright:
                     //向右
                     ivright.setBackgroundResource(R.mipmap.y2);
                     this.cmd = "08";
-
-//                    ivdown.setOnTouchListener(null);
-//                    ivleft.setOnTouchListener(null);
-//                    ivUp.setOnTouchListener(null);
                     break;
                 default:
                     break;
             }
         } else if (action == MotionEvent.ACTION_UP) {
             // 松开
-            isCaozuo = false;
-//            ivright.setOnTouchListener(this);
-//            ivdown.setOnTouchListener(this);
-//            ivleft.setOnTouchListener(this);
-//            ivUp.setOnTouchListener(this);
             switch (id) {
                 case R.id.lltop:
                     ivUp.setBackgroundResource(R.mipmap.s1);
@@ -230,7 +200,6 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
                     break;
                 case R.id.llright:
                     ivright.setBackgroundResource(R.mipmap.r1);
-                    this.cmd = "08";
                 default:
                     this.cmd = STILL_CODE;
                     break;
@@ -238,12 +207,7 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
             this.cmd = STILL_CODE;
             speed = 10;
             verticalSeekBar.setProgress(0);
-        } else if (action == MotionEvent.ACTION_CANCEL) {
-            isCaozuo = false;
-            ivright.setOnTouchListener(this);
-            ivdown.setOnTouchListener(this);
-            ivleft.setOnTouchListener(this);
-            ivUp.setOnTouchListener(this);
+        } else if (action == MotionEvent.ACTION_CANCEL || action == MotionEvent.ACTION_OUTSIDE) {
             switch (id) {
                 case R.id.lltop:
                     ivUp.setBackgroundResource(R.mipmap.s1);
@@ -257,7 +221,6 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
                 case R.id.llright:
                     ivright.setBackgroundResource(R.mipmap.r1);
                 default:
-                    this.cmd = STILL_CODE;
                     break;
             }
             this.cmd = STILL_CODE;
