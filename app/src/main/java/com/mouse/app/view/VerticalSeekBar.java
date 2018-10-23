@@ -5,8 +5,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Point;
 import android.graphics.RectF;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -47,6 +49,7 @@ public class VerticalSeekBar extends View {
      * 1代表从下向上滑
      */
     private int orientation;
+    private Point point;
 
     /**
      * 设置未选中的颜色
@@ -202,6 +205,7 @@ public class VerticalSeekBar extends View {
     private void init(Context context, AttributeSet attrs, int defStyleAttr) {
         this.context = context;
         paint = new Paint();
+        point = new Point();
         mThumb = BitmapFactory.decodeResource(getResources(), R.mipmap.seekbarp);
         intrinsicHeight = mThumb.getHeight();
         intrinsicWidth = mThumb.getWidth();
@@ -226,37 +230,41 @@ public class VerticalSeekBar extends View {
 
     }
 
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 //判断点击点是否在圈圈上
+                downX = event.getX();
+                downY = event.getY();
                 isInnerClick = isInnerMthum(event);
                 if (isInnerClick) {
                     if (listener != null) {
                         listener.onStart(this, progress);
                     }
                 }
-                downX = event.getX();
-                downY = event.getY();
-
                 break;
             case MotionEvent.ACTION_MOVE:
-                if (isInnerClick) {
-                    locationY = (int) event.getY();//int) (locationY + event.getY() - downY);
-                    fixLocationY();
-
-                    progress = (int) (maxProgress - (locationY - intrinsicHeight * 0.5) / (height
-                            - intrinsicHeight) * maxProgress);
-                    if (orientation == 1) {
-                        progress = maxProgress - progress;
-                    }
-                    downY = event.getY();
-                    downX = event.getX();
-                    if (listener != null) {
-                        listener.onProgress(this, progress);
-                    }
-                    invalidate();
+                //判断坐标是否在矩形里面
+                downX =  event.getX();
+                downY =  event.getY();
+                if (downX > 10) {
+                    Log.e("----->", "越界了" );
+                } else {
+//                    if (isInnerClick) {
+//                        locationY = (int) event.getY();
+//                        fixLocationY();
+//                        progress = (int) (maxProgress - (locationY - intrinsicHeight * 0.5) / (height
+//                                - intrinsicHeight) * maxProgress);
+//                        if (orientation == 1) {
+//                            progress = maxProgress - progress;
+//                        }
+//                        if (listener != null) {
+//                            listener.onProgress(this, progress);
+//                        }
+//                        invalidate();
+//                    }
                 }
                 break;
             case MotionEvent.ACTION_UP:
@@ -271,6 +279,7 @@ public class VerticalSeekBar extends View {
         }
         return true;
     }
+
 
     private void fixLocationY() {
         if (locationY <= intrinsicHeight / 2) {
@@ -291,6 +300,7 @@ public class VerticalSeekBar extends View {
                 intrinsicWidth / 2 && event.getY() >= locationY - intrinsicHeight / 2 && event
                 .getY() <= locationY + intrinsicHeight / 2;
     }
+
 
     @Override
     protected void onDraw(Canvas canvas) {

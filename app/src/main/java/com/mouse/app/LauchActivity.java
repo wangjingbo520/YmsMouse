@@ -1,10 +1,10 @@
 package com.mouse.app;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 
 public class LauchActivity extends AppCompatActivity {
 
@@ -23,7 +23,7 @@ public class LauchActivity extends AppCompatActivity {
             switch (msg.what) {
                 case 200:
                    startActivity(new Intent(LauchActivity.this, MainActivity.class));
-                //   startActivity(new Intent(LauchActivity.this, PlayActivity.class));
+               //    startActivity(new Intent(LauchActivity.this, PlayActivity.class));
                     finish();
                     break;
                 default:

@@ -8,9 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.KeyEvent;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -19,10 +17,11 @@ import com.inuker.bluetooth.library.connect.options.BleConnectOptions;
 import com.inuker.bluetooth.library.connect.response.BleConnectResponse;
 import com.inuker.bluetooth.library.model.BleGattProfile;
 import com.inuker.bluetooth.library.utils.BluetoothLog;
-import com.inuker.bluetooth.library.utils.BluetoothUtils;
 import com.mouse.app.demo.VerticalSeekBar;
+import com.mouse.app.utils.BluetoothUtils;
 import com.mouse.app.utils.ClientManager;
 import com.mouse.app.view.BatteryView;
+import com.mouse.app.view.MyLinearLayout;
 
 import java.lang.ref.WeakReference;
 
@@ -31,7 +30,7 @@ import static com.inuker.bluetooth.library.Constants.STATUS_CONNECTED;
 
 
 public class PlayActivity extends BaseActivity implements View.OnClickListener, VerticalSeekBar
-        .SlideChangeListener, View.OnTouchListener {
+        .SlideChangeListener, MyLinearLayout.LinearChangeListener {
     private BatteryView horizontalBattery;
     private String macAdress;
     private BluetoothDevice mDevice;
@@ -50,6 +49,11 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
     private ImageView ivright;
     private ImageView ivleft;
 
+    private MyLinearLayout lltop;
+    private MyLinearLayout llleft;
+    private MyLinearLayout llbottom;
+    private MyLinearLayout llright;
+
     public static void start(Context context, String macAdress) {
         Intent starter = new Intent(context, PlayActivity.class);
         starter.putExtra("macAdress", macAdress);
@@ -64,23 +68,26 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
         horizontalBattery = findViewById(R.id.horizontalBattery);
         findViewById(R.id.llguide).setOnClickListener(this);
         findViewById(R.id.llhome).setOnClickListener(this);
-     //   findViewById(R.id.lltop).setOnTouchListener(this);
-//        findViewById(R.id.llbottom).setOnTouchListener(this);
-//        findViewById(R.id.llleft).setOnTouchListener(this);
-//        findViewById(R.id.llright).setOnTouchListener(this);
 
+        lltop = findViewById(R.id.lltop);
+        llleft = findViewById(R.id.llleft);
+        llbottom = findViewById(R.id.llbottom);
+        llright = findViewById(R.id.llright);
         ivUp = findViewById(R.id.ivUp);
         ivdown = findViewById(R.id.ivdown);
         ivright = findViewById(R.id.ivright);
         ivleft = findViewById(R.id.ivleft);
         macAdress = getIntent().getStringExtra("macAdress");
         mDevice = BluetoothUtils.getRemoteDevice(macAdress);
-        ClientManager.getClient().registerConnectStatusListener(macAdress,
-                mConnectStatusListener);
+        ClientManager.getClient().registerConnectStatusListener(macAdress, mConnectStatusListener);
         verticalSeekBar = findViewById(R.id.verticalSeekBar);
         verticalSeekBar.setMaxProgress(19);
         verticalSeekBar.setProgress(0);
         verticalSeekBar.setOnSlideChangeListener(this);
+        lltop.setOnLinearChangeListener(this);
+        llbottom.setOnLinearChangeListener(this);
+        llleft.setOnLinearChangeListener(this);
+        llright.setOnLinearChangeListener(this);
         myMainHandler = new MyMainHandler(this);
         notifi(macAdress);
     }
@@ -113,6 +120,7 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
                 BluetoothLog.v(String.format("profile:\n%s", profile));
                 if (code == REQUEST_SUCCESS) {
                     //重连成功
+
                 }
             }
         });
@@ -157,88 +165,88 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
     };
 
     @Override
-    public boolean onTouch(View view, MotionEvent motionEvent) {
-        int action = motionEvent.getAction();
-        int id = view.getId();
-        Log.e("action", "onTouch: "+action);
+    public void onStart(MyLinearLayout linearLayout) {
         myMainHandler.removeCallbacks(task);
-        if (action == MotionEvent.ACTION_DOWN) {
-            //按下去
-            switch (id) {
-                case R.id.lltop:
-                    //前进
-                    ivUp.setBackgroundResource(R.mipmap.s2);
-                    this.cmd = "01";
-                    break;
-                case R.id.llbottom:
-                    //后退
-                    ivdown.setBackgroundResource(R.mipmap.x2);
-                    this.cmd = "02";
-                    break;
-                case R.id.llleft:
-                    //向左
-                    ivleft.setBackgroundResource(R.mipmap.z2);
-                    this.cmd = "04";
-                    break;
-                case R.id.llright:
-                    //向右
-                    ivright.setBackgroundResource(R.mipmap.y2);
-                    this.cmd = "08";
-                    break;
-                default:
-                    break;
-            }
-        } else if (action == MotionEvent.ACTION_UP) {
-            // 松开
-            switch (id) {
-                case R.id.lltop:
-                    ivUp.setBackgroundResource(R.mipmap.s1);
-                    break;
-                case R.id.llbottom:
-                    ivdown.setBackgroundResource(R.mipmap.x1);
-                    break;
-                case R.id.llleft:
-                    ivleft.setBackgroundResource(R.mipmap.l1);
-                    break;
-                case R.id.llright:
-                    ivright.setBackgroundResource(R.mipmap.r1);
-                default:
-                    this.cmd = STILL_CODE;
-                    break;
-            }
-            this.cmd = STILL_CODE;
-            speed = 10;
-            verticalSeekBar.setProgress(0);
-        } else if (action == MotionEvent.ACTION_CANCEL || action == MotionEvent.ACTION_OUTSIDE) {
-            switch (id) {
-                case R.id.lltop:
-                    ivUp.setBackgroundResource(R.mipmap.s1);
-                    break;
-                case R.id.llbottom:
-                    ivdown.setBackgroundResource(R.mipmap.x1);
-                    break;
-                case R.id.llleft:
-                    ivleft.setBackgroundResource(R.mipmap.l1);
-                    break;
-                case R.id.llright:
-                    ivright.setBackgroundResource(R.mipmap.r1);
-                default:
-                    break;
-            }
-            this.cmd = STILL_CODE;
-            speed = 10;
-            verticalSeekBar.setProgress(0);
+        switch (linearLayout.getId()) {
+            case R.id.lltop:
+                //前进
+                ivUp.setBackgroundResource(R.mipmap.s2);
+                this.cmd = "01";
+                llleft.setOnLinearChangeListener(null);
+                llright.setOnLinearChangeListener(null);
+                llbottom.setOnLinearChangeListener(null);
+                break;
+            case R.id.llbottom:
+                //后退
+                ivdown.setBackgroundResource(R.mipmap.x2);
+                this.cmd = "02";
+                llleft.setOnLinearChangeListener(null);
+                llright.setOnLinearChangeListener(null);
+                lltop.setOnLinearChangeListener(null);
+                break;
+            case R.id.llleft:
+                //向左
+                ivleft.setBackgroundResource(R.mipmap.z2);
+                this.cmd = "04";
+                llbottom.setOnLinearChangeListener(null);
+                llright.setOnLinearChangeListener(null);
+                lltop.setOnLinearChangeListener(null);
+                break;
+            case R.id.llright:
+                //向右
+                ivright.setBackgroundResource(R.mipmap.y2);
+                this.cmd = "08";
+                llbottom.setOnLinearChangeListener(null);
+                llleft.setOnLinearChangeListener(null);
+                lltop.setOnLinearChangeListener(null);
+                break;
+            default:
+                break;
         }
         myMainHandler.sendEmptyMessage(1);
-        return true;
     }
-
 
     @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        return super.onTouchEvent(event);
-
+    public void onStop(MyLinearLayout linearLayout) {
+        myMainHandler.removeCallbacks(task);
+        switch (linearLayout.getId()) {
+            case R.id.lltop:
+                //前进
+                ivUp.setBackgroundResource(R.mipmap.s1);
+                llleft.setOnLinearChangeListener(this);
+                llbottom.setOnLinearChangeListener(this);
+                llright.setOnLinearChangeListener(this);
+                break;
+            case R.id.llbottom:
+                //后退
+                ivdown.setBackgroundResource(R.mipmap.x1);
+                llleft.setOnLinearChangeListener(this);
+                lltop.setOnLinearChangeListener(this);
+                llright.setOnLinearChangeListener(this);
+                break;
+            case R.id.llleft:
+                //向左
+                ivleft.setBackgroundResource(R.mipmap.l1);
+                llbottom.setOnLinearChangeListener(this);
+                lltop.setOnLinearChangeListener(this);
+                llright.setOnLinearChangeListener(this);
+                break;
+            case R.id.llright:
+                //向右
+                ivright.setBackgroundResource(R.mipmap.r1);
+                llbottom.setOnLinearChangeListener(this);
+                lltop.setOnLinearChangeListener(this);
+                llright.setOnLinearChangeListener(this);
+                break;
+            default:
+                break;
+        }
+        this.cmd = STILL_CODE;
+        speed = 10;
+        verticalSeekBar.setProgress(0);
+        myMainHandler.sendEmptyMessage(1);
     }
+
 
     public static class MyMainHandler extends Handler {
         WeakReference<PlayActivity> mActivityReference;
@@ -303,7 +311,6 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
         super.onNotifiSucess(value);
         //电量显示
         Integer x = Integer.parseInt(String.valueOf(value[1]), 16);
-        // Log.e("-->", "onNotifiSucess: "+x );
         horizontalBattery.setPower(x);
     }
 }

@@ -137,7 +137,7 @@
                     android:background="@mipmap/s1" />
             </com.mouse.app.view.MyLinearLayout>
 
-            <LinearLayout
+            <com.mouse.app.view.MyLinearLayout
                 android:id="@+id/llbottom"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -150,9 +150,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@mipmap/x1" />
-            </LinearLayout>
+            </com.mouse.app.view.MyLinearLayout>
 
-            <LinearLayout
+            <com.mouse.app.view.MyLinearLayout
                 android:id="@+id/llright"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -165,9 +165,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@mipmap/r1" />
-            </LinearLayout>
+            </com.mouse.app.view.MyLinearLayout>
 
-            <LinearLayout
+            <com.mouse.app.view.MyLinearLayout
                 android:id="@+id/llleft"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -180,7 +180,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@mipmap/l1" />
-            </LinearLayout>
+            </com.mouse.app.view.MyLinearLayout>
 
         </RelativeLayout>
 

@@ -7,7 +7,6 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -240,29 +239,30 @@ public class VerticalSeekBar extends View {
                         listener.onStart(this, progress);
                     }
                 }
-                downX = event.getX();
-                downY = event.getY();
-          //      Log.e("---------->", "ACTION_DOWN: ");
                 break;
             case MotionEvent.ACTION_MOVE:
                 if (isInnerClick) {
-                    locationY = (int) event.getY();
-                    //int) (locationY + event.getY() - downY);
-                    fixLocationY();
-
-                    progress = (int) (maxProgress - (locationY - intrinsicHeight * 0.5) / (height
-                            - intrinsicHeight) * maxProgress);
-                    if (orientation == 1) {
-                        progress = maxProgress - progress;
-                    }
-                    downY = event.getY();
                     downX = event.getX();
-                    if (listener != null) {
-                        listener.onProgress(this, progress);
+                    if (downX > getWidth() + 20 || downX < -20) {
+                        if (listener != null) {
+                            listener.onStop(this, progress);
+                        }
+                    } else {
+                        locationY = (int) event.getY();
+                        fixLocationY();
+                        progress = (int) (maxProgress - (locationY - intrinsicHeight * 0.5) / (height
+                                - intrinsicHeight) * maxProgress);
+                        if (orientation == 1) {
+                            progress = maxProgress - progress;
+                        }
+                        downY = event.getY();
+                        downX = event.getX();
+                        if (listener != null) {
+                            listener.onProgress(this, progress);
+                        }
+                        invalidate();
                     }
-                    invalidate();
                 }
-            //    Log.e("---------->", "ACTION_MOVE: ");
                 break;
             case MotionEvent.ACTION_UP:
                 if (isInnerClick) {
@@ -270,7 +270,6 @@ public class VerticalSeekBar extends View {
                         listener.onStop(this, progress);
                     }
                 }
-           //     Log.e("---------->", "ACTION_UP: ");
                 break;
             case MotionEvent.ACTION_CANCEL:
                 if (isInnerClick) {
@@ -278,7 +277,7 @@ public class VerticalSeekBar extends View {
                         listener.onStop(this, progress);
                     }
                 }
-              //  Log.e("---------->", "ACTION_CANCEL: ");
+                //  Log.e("---------->", "ACTION_CANCEL: ");
                 break;
             default:
                 break;
