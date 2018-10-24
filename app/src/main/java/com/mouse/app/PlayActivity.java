@@ -236,7 +236,7 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
                 ivright.setBackgroundResource(R.mipmap.r1);
                 llbottom.setOnLinearChangeListener(this);
                 lltop.setOnLinearChangeListener(this);
-                llright.setOnLinearChangeListener(this);
+                llleft.setOnLinearChangeListener(this);
                 break;
             default:
                 break;
