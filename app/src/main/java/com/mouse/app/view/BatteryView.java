@@ -78,7 +78,7 @@ public class BatteryView extends View {
         RectF r1 = new RectF(strokeWidth_2, strokeWidth_2, width - strokeWidth - strokeWidth_2,
                 height - strokeWidth_2);
         //设置外边框颜色为黑色
-        paint.setColor(Color.BLACK);
+        paint.setColor(Color.parseColor("#4ea346"));
         canvas.drawRect(r1, paint);
         paint.setStrokeWidth(0);
         paint.setStyle(Paint.Style.FILL);
@@ -100,7 +100,7 @@ public class BatteryView extends View {
         //画电池头
         RectF r3 = new RectF(width - strokeWidth, height * 0.25f, width, height * 0.75f);
         //设置电池头颜色为黑色
-        paint.setColor(Color.BLACK);
+        paint.setColor(Color.parseColor("#4ea346"));
         canvas.drawRect(r3, paint);
     }
 

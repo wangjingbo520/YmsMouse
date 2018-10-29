@@ -1,7 +1,6 @@
 package com.mouse.app;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,20 +10,13 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.KeyEvent;
-import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Toast;
 
-import com.mouse.app.demo.DemoActivity;
 import com.mouse.app.utils.ClientManager;
-import com.mouse.app.utils.Constants;
-import com.mouse.app.utils.MathUtils;
 import com.mouse.app.utils.ToastUtil;
 
 import java.util.Locale;
@@ -35,9 +27,6 @@ import permissions.dispatcher.OnPermissionDenied;
 import permissions.dispatcher.OnShowRationale;
 import permissions.dispatcher.PermissionRequest;
 import permissions.dispatcher.RuntimePermissions;
-
-import static com.mouse.app.utils.MathUtils.makeChecksum;
-import static com.mouse.app.utils.MathUtils.randomHexString;
 
 @RuntimePermissions
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -70,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(new Intent(this, BleActivity.class));
                 break;
             case R.id.tv4:
-                //   dialogChoice();
+                dialogChoice();
                 break;
             default:
                 break;
@@ -90,17 +79,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if (0 == which) {
-                            com.mouse.app.Constants.langae = "zh";
-                        } else if (1 == which) {
-                            com.mouse.app.Constants.langae = "en";
-                        }
+//                        if (0 == which) {
+//                            com.mouse.app.Constants.langae = "zh";
+//                        } else if (1 == which) {
+//                            com.mouse.app.Constants.langae = "en";
+//                        }
                     }
                 });
         builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                setLangue();
+             //   setLangue();
                 dialog.dismiss();
             }
         });
