@@ -46,10 +46,10 @@ public class BaseActivity extends AppCompatActivity {
         @Override
         public void onResponse(int code) {
             if (code == REQUEST_SUCCESS) {
-                Log.e("----->", "writeSucess");
+          //      Log.e("----->", "writeSucess");
                 onWriteSucess();
             } else {
-                Log.e("----->", "writeFailed");
+          //      Log.e("----->", "writeFailed");
             }
         }
     };
