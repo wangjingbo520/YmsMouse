@@ -90,6 +90,7 @@ public class BatteryView extends View {
             paint.setColor(Color.RED);
         }
 
+
         if (mPower >= 3 && mPower < 6) {
             paint.setColor(Color.BLUE);
         }
