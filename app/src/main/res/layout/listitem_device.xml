@@ -22,6 +22,7 @@
         android:textSize="@dimen/sp_15" />
 
     <TextView
+        android:visibility="invisible"
         android:id="@+id/device_address"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

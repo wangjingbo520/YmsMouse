@@ -67,11 +67,11 @@ public class BleActivity extends BaseActivity implements DeviceListAdapter.Adres
         swipe.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                searchDevice(1, 3000, 2000);
+                searchDevice(1, 2000, 2000);
             }
         });
 
-        searchDevice(2, 3000, 2000);
+        searchDevice(2, 2000, 1000);
         ClientManager.getClient().registerBluetoothStateListener(new BluetoothStateListener() {
             @Override
             public void onBluetoothStateChanged(boolean openOrClosed) {

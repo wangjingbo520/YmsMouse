@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .getString(R.string.app_english)};
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("单选");
-        builder.setIcon(R.mipmap.ic_launcher);
+        builder.setIcon(R.mipmap.lauch);
         builder.setSingleChoiceItems(items, 0,
                 new DialogInterface.OnClickListener() {
                     @Override
