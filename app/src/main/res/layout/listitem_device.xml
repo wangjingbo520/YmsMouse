@@ -8,9 +8,10 @@
     android:padding="@dimen/dp_10">
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@mipmap/anione" />
+        android:layout_width="@dimen/dp_50"
+        android:layout_height="@dimen/dp_50"
+        android:scaleType="centerCrop"
+        android:src="@mipmap/lauch" />
 
     <TextView
         android:id="@+id/device_name"
