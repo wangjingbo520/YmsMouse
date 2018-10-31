@@ -33,8 +33,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/dp_300"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="@dimen/dp_20"
-                android:layout_marginBottom="@dimen/dp_20">
+                android:layout_marginBottom="@dimen/dp_20"
+                android:layout_marginTop="@dimen/dp_20">
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -81,6 +81,12 @@
         android:layout_weight="2"
         android:orientation="vertical">
 
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"
+            android:clickable="true" />
+
         <com.mouse.app.view.BatteryView
             android:id="@+id/horizontalBattery"
             android:layout_width="@dimen/dp_30"
@@ -101,10 +107,10 @@
             android:layout_toRightOf="@id/horizontalBattery"
             android:background="@drawable/bg_dialog_confirm"
             android:gravity="center"
-            android:paddingLeft="@dimen/dp_20"
-            android:paddingTop="@dimen/dp_5"
-            android:paddingRight="@dimen/dp_20"
             android:paddingBottom="@dimen/dp_5"
+            android:paddingLeft="@dimen/dp_20"
+            android:paddingRight="@dimen/dp_20"
+            android:paddingTop="@dimen/dp_5"
             android:text="Play:Remote Control "
             android:textColor="@color/white" />
 
